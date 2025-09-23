@@ -1,0 +1,19 @@
+
+> agiloft-clmvaluemap_sqlite@0.1.0 dev
+> next dev
+
+   ▲ Next.js 15.5.3
+   - Local:        http://localhost:3000
+   - Network:      http://192.168.7.153:3000
+
+ ✓ Starting...
+ ✓ Ready in 991ms
+ ○ Compiling / ...
+ ✓ Compiled / in 1475ms (3145 modules)
+ GET / 200 in 1968ms
+ GET / 200 in 75ms
+ ✓ Compiled in 458ms (3145 modules)
+ ✓ Compiled in 240ms (3145 modules)
+ GET / 200 in 395ms
+ ✓ Compiled /favicon.ico in 260ms (1643 modules)
+ GET /favicon.ico 200 in 330ms

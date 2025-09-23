@@ -1,0 +1,1083 @@
+{
+  "title": "CLM Maturity Self-Assessment",
+  "description": "Evaluate your organization's contract lifecycle management maturity",
+  "pages": [
+    {
+      "name": "introduction",
+      "title": "Welcome to the CLM Self-Assessment Survey",
+      "elements": [
+        {
+          "type": "html",
+          "name": "intro_html",
+          "title": "",
+          "isRequired": false,
+          "choices": [],
+          "description": "\n          <div style=\"padding: 20px; background: #f8f9fa; border-radius: 8px;\">\n            <h3>Contract Lifecycle Management (CLM) Maturity Assessment</h3>\n            <p>This comprehensive assessment will help you evaluate your organization's contract management maturity across six critical stages:</p>\n            <ul>\n              <li><strong>Stage 1: e-Document</strong> - Digital document management capabilities</li>\n              <li><strong>Stage 2: e-Signature</strong> - Electronic signature integration</li>\n              <li><strong>Stage 3: Contract Workflow Automation</strong> - Automated processes and workflows</li>\n              <li><strong>Stage 4: Contract Authoring Automation</strong> - Template and clause management</li>\n              <li><strong>Stage 5: Contract Intelligence</strong> - Analytics and insights</li>\n              <li><strong>Stage 6: Contract Execution</strong> - Performance monitoring and integration</li>\n            </ul>\n            <p>Each question uses a 1-5 rating scale where:</p>\n            <ul>\n              <li><strong>1</strong> = No capability or very limited functionality</li>\n              <li><strong>2</strong> = Basic capability with significant limitations</li>\n              <li><strong>3</strong> = Moderate capability with some automation</li>\n              <li><strong>4</strong> = Good capability with reliable automation</li>\n              <li><strong>5</strong> = Advanced capability with comprehensive automation</li>\n            </ul>\n            <p>Your responses will be saved automatically as you progress through the survey.</p>\n          </div>\n        "
+        }
+      ]
+    },
+    {
+      "name": "user_info",
+      "title": "Your Information",
+      "elements": [
+        {
+          "type": "text",
+          "name": "company_name",
+          "title": "Company Name",
+          "isRequired": true,
+          "choices": []
+        },
+        {
+          "type": "text",
+          "name": "email",
+          "title": "Email Address",
+          "isRequired": true,
+          "choices": [],
+          "description": "We'll use this to save your progress and send you the results"
+        },
+        {
+          "type": "text",
+          "name": "name",
+          "title": "Your Name (Optional)",
+          "isRequired": false,
+          "choices": []
+        },
+        {
+          "type": "text",
+          "name": "role",
+          "title": "Your Role (Optional)",
+          "isRequired": false,
+          "choices": []
+        }
+      ]
+    },
+    {
+      "name": "stage_1",
+      "title": "Stage 1: e-Document",
+      "elements": [
+        {
+          "type": "radiogroup",
+          "name": "stage1_centralized_contract_repository_1",
+          "title": "How effectively does your organization maintain a centralized repository where all contracts are accessible to authorized personnel, regardless of storage platform?",
+          "isRequired": true,
+          "choices": [
+            {
+              "value": 1,
+              "text": "No centralized repository; contracts stored in various locations with no systematic organization"
+            },
+            {
+              "value": 2,
+              "text": "Basic shared storage location exists but with limited organization and accessibility issues"
+            },
+            {
+              "value": 3,
+              "text": "Centralized repository exists with basic search but incomplete contract coverage"
+            },
+            {
+              "value": 4,
+              "text": "Well-organized repository with most contracts accessible and searchable by authorized users"
+            },
+            {
+              "value": 5,
+              "text": "Comprehensive repository with flexible indexing, complete contract coverage, and role-based access controls"
+            }
+          ],
+          "description": "Centralized contract repository"
+        },
+        {
+          "type": "radiogroup",
+          "name": "stage1_document_classification_and_tagging_2",
+          "title": "To what extent have you implemented user-defined metadata that aligns with your organizational standards to enhance contract retrieval and analysis?",
+          "isRequired": true,
+          "choices": [
+            {
+              "value": 1,
+              "text": "No systematic tagging or classification system"
+            },
+            {
+              "value": 2,
+              "text": "Basic document types identified but limited metadata applied inconsistently"
+            },
+            {
+              "value": 3,
+              "text": "Standardized classification scheme with moderate consistency in application"
+            },
+            {
+              "value": 4,
+              "text": "Comprehensive metadata framework consistently applied to most contracts"
+            },
+            {
+              "value": 5,
+              "text": "Robust user-defined metadata system fully aligned with organizational standards, enabling advanced retrieval and analysis"
+            }
+          ],
+          "description": "Document classification and tagging"
+        },
+        {
+          "type": "radiogroup",
+          "name": "stage1_audit_trails_and_document_history_3",
+          "title": "How comprehensive are your audit logs for tracking all contract-related activities, and can they be easily downloaded for compliance purposes?",
+          "isRequired": true,
+          "choices": [
+            {
+              "value": 1,
+              "text": "No audit capabilities or very limited change tracking"
+            },
+            {
+              "value": 2,
+              "text": "Basic version history without user attribution or comprehensive activity logs"
+            },
+            {
+              "value": 3,
+              "text": "Moderate audit capabilities capturing major changes with limited reporting"
+            },
+            {
+              "value": 4,
+              "text": "Comprehensive activity tracking with user attribution and standard reports"
+            },
+            {
+              "value": 5,
+              "text": "Complete, downloadable detailed logs for all activities with custom reporting for regulatory compliance"
+            }
+          ],
+          "description": "Audit trails and document history"
+        },
+        {
+          "type": "radiogroup",
+          "name": "stage1_bulk_contract_import_and_export_4",
+          "title": "Does your system effectively handle large-volume contract imports with AI-powered analysis and data extraction capabilities?",
+          "isRequired": true,
+          "choices": [
+            {
+              "value": 1,
+              "text": "Manual contract import only; no bulk capabilities"
+            },
+            {
+              "value": 2,
+              "text": "Basic bulk upload but requires extensive manual processing afterward"
+            },
+            {
+              "value": 3,
+              "text": "Bulk import with semi-automated data extraction requiring significant manual verification"
+            },
+            {
+              "value": 4,
+              "text": "Efficient bulk import with good automated data extraction and moderate accuracy"
+            },
+            {
+              "value": 5,
+              "text": "AI-powered bulk import with high-quality automated analysis and data extraction requiring minimal manual intervention"
+            }
+          ],
+          "description": "Bulk contract import and export"
+        }
+      ]
+    },
+    {
+      "name": "stage_2",
+      "title": "Stage 2: e-Signature",
+      "elements": [
+        {
+          "type": "radiogroup",
+          "name": "stage2_e_signature_capability_or_integration_1",
+          "title": "How seamlessly does your system integrate with e-Signature providers to facilitate contract closure and negotiation?",
+          "isRequired": true,
+          "choices": [
+            {
+              "value": 1,
+              "text": "No e-Signature capabilities; paper-based signatures only"
+            },
+            {
+              "value": 2,
+              "text": "Basic e-Signature capabilities but disconnected from contract management system"
+            },
+            {
+              "value": 3,
+              "text": "Functional integration with one e-Signature provider with manual data synchronization"
+            },
+            {
+              "value": 4,
+              "text": "Good integration with major e-Signature providers with automated status updates"
+            },
+            {
+              "value": 5,
+              "text": "Seamless integration with multiple e-Signature providers, supporting complex signing workflows and complete visibility"
+            }
+          ],
+          "description": "e-Signature capability or integration"
+        }
+      ]
+    },
+    {
+      "name": "stage_3",
+      "title": "Stage 3: Contract Workflow Automation",
+      "elements": [
+        {
+          "type": "radiogroup",
+          "name": "stage3_customizable_approvals_workflows_1",
+          "title": "How effectively can your team configure no-code approval workflows that align with your organization's unique needs, including tracking, reporting, and notifications?",
+          "isRequired": true,
+          "choices": [
+            {
+              "value": 1,
+              "text": "No standardized approval workflows; ad-hoc email-based approvals"
+            },
+            {
+              "value": 2,
+              "text": "Basic predefined workflows with limited customization"
+            },
+            {
+              "value": 3,
+              "text": "Moderately customizable workflows requiring technical assistance"
+            },
+            {
+              "value": 4,
+              "text": "Good no-code workflow configuration with role-based assignments and notifications"
+            },
+            {
+              "value": 5,
+              "text": "Highly flexible, no-code workflow capability with comprehensive tracking, reporting, and multi-channel alerts"
+            }
+          ],
+          "description": "Customizable approvals workflows"
+        },
+        {
+          "type": "radiogroup",
+          "name": "stage3_renewals_management_2",
+          "title": "To what extent does your system automate renewal workflows, monitor renegotiation needs, and alert teams to avoid missed deadlines?",
+          "isRequired": true,
+          "choices": [
+            {
+              "value": 1,
+              "text": "No renewal tracking; entirely manual process"
+            },
+            {
+              "value": 2,
+              "text": "Basic calendar reminders without workflow integration"
+            },
+            {
+              "value": 3,
+              "text": "Systematic renewal date tracking with manual workflow initiation"
+            },
+            {
+              "value": 4,
+              "text": "Automated renewal alerts with semi-automated workflow initiation"
+            },
+            {
+              "value": 5,
+              "text": "Fully automated, user-configurable renewal workflows with advance monitoring, timely alerts, and automated renegotiation initiation"
+            }
+          ],
+          "description": "Renewals management"
+        },
+        {
+          "type": "radiogroup",
+          "name": "stage3_contract_review_and_negotiation_3",
+          "title": "How well does your system support multi-participant review and negotiation across different storage mechanisms while maintaining confidential internal communications?",
+          "isRequired": true,
+          "choices": [
+            {
+              "value": 1,
+              "text": "Email-based review and negotiation without system support"
+            },
+            {
+              "value": 2,
+              "text": "Basic document sharing capabilities but limited collaboration features"
+            },
+            {
+              "value": 3,
+              "text": "Moderate collaboration tools with some version control but limited confidentiality controls"
+            },
+            {
+              "value": 4,
+              "text": "Good collaborative review with version control and basic internal commenting"
+            },
+            {
+              "value": 5,
+              "text": "Comprehensive multi-participant review across storage platforms with robust confidential messaging and negotiation tracking"
+            }
+          ],
+          "description": "Contract review and negotiation"
+        },
+        {
+          "type": "radiogroup",
+          "name": "stage3_third_party_contract_management_4",
+          "title": "How seamlessly can your system onboard, analyze, and manage third-party contracts, including risk assessment and clause analysis?",
+          "isRequired": true,
+          "choices": [
+            {
+              "value": 1,
+              "text": "No specific third-party contract capabilities; managed same as internal contracts"
+            },
+            {
+              "value": 2,
+              "text": "Basic storage of third-party contracts with minimal analysis"
+            },
+            {
+              "value": 3,
+              "text": "Standardized intake process with manual analysis and risk assessment"
+            },
+            {
+              "value": 4,
+              "text": "Good automated intake with basic AI-assisted analysis"
+            },
+            {
+              "value": 5,
+              "text": "Seamless AI-enhanced onboarding with comprehensive risk, compliance, and clause analysis"
+            }
+          ],
+          "description": "Third-party contract management"
+        },
+        {
+          "type": "radiogroup",
+          "name": "stage3_risk_scoring_and_compliance_management_5",
+          "title": "To what extent does your system provide risk scoring and compliance monitoring to identify potential issues and ensure regulatory adherence?",
+          "isRequired": true,
+          "choices": [
+            {
+              "value": 1,
+              "text": "No systematic risk assessment or compliance monitoring"
+            },
+            {
+              "value": 2,
+              "text": "Basic manual risk assessment without consistent methodology or systematic compliance checks"
+            },
+            {
+              "value": 3,
+              "text": "Standardized risk assessment and compliance methodology but manually applied with limited tracking"
+            },
+            {
+              "value": 4,
+              "text": "Automated risk scoring and compliance checks based on predefined rules with regular monitoring"
+            },
+            {
+              "value": 5,
+              "text": "Advanced risk modeling with configurable scoring algorithms, automated compliance verification, and proactive regulatory monitoring"
+            }
+          ],
+          "description": "Risk scoring and compliance management"
+        },
+        {
+          "type": "radiogroup",
+          "name": "stage3_template_and_clause_standardization_6",
+          "title": "How effectively does your system implement standardized templates and clause standardization to limit inconsistency risks and ensure uniformity across contracts?",
+          "isRequired": true,
+          "choices": [
+            {
+              "value": 1,
+              "text": "No standardized templates or clauses; each contract created uniquely"
+            },
+            {
+              "value": 2,
+              "text": "Basic templates exist but with minimal enforcement and frequent custom modifications"
+            },
+            {
+              "value": 3,
+              "text": "Standard templates with moderate clause control but inconsistent usage across departments"
+            },
+            {
+              "value": 4,
+              "text": "Well-defined template and clause library with good adoption and consistency across most contract types"
+            },
+            {
+              "value": 5,
+              "text": "Comprehensive template and clause standardization with automated enforcement, version control, and complete organizational adoption"
+            }
+          ],
+          "description": "Template and clause standardization"
+        }
+      ]
+    },
+    {
+      "name": "stage_4",
+      "title": "Stage 4: Contract Authoring Automation",
+      "elements": [
+        {
+          "type": "radiogroup",
+          "name": "stage4_redlining_and_collaboration_1",
+          "title": "To what extent does your system offer AI-enhanced redlining capabilities that accelerate negotiations while maintaining appropriate access controls?",
+          "isRequired": true,
+          "choices": [
+            {
+              "value": 1,
+              "text": "No system redlining capabilities; using external word processing tools"
+            },
+            {
+              "value": 2,
+              "text": "Basic document comparison without intelligent assistance"
+            },
+            {
+              "value": 3,
+              "text": "Standard redlining capabilities with version tracking but minimal AI enhancement"
+            },
+            {
+              "value": 4,
+              "text": "Good AI-assisted redlining with clause suggestions and version control"
+            },
+            {
+              "value": 5,
+              "text": "Advanced AI-enhanced redlining with intelligent alternatives, negotiation acceleration, and sophisticated access controls"
+            }
+          ],
+          "description": "Redlining and collaboration"
+        },
+        {
+          "type": "radiogroup",
+          "name": "stage4_automated_contract_creation_2",
+          "title": "How well does your system support user-friendly contract requests with automatic creation based on dynamic, configurable, AI-enriched templates?",
+          "isRequired": true,
+          "choices": [
+            {
+              "value": 1,
+              "text": "Manual contract drafting with no automation"
+            },
+            {
+              "value": 2,
+              "text": "Basic templates requiring significant manual adjustment"
+            },
+            {
+              "value": 3,
+              "text": "Standard templates with limited dynamic content"
+            },
+            {
+              "value": 4,
+              "text": "Good template system with conditional clauses and basic automation"
+            },
+            {
+              "value": 5,
+              "text": "Fully automated contract creation with user-friendly interfaces, dynamic AI-enriched templates, and no-code configuration capabilities"
+            }
+          ],
+          "description": "Automated contract creation"
+        },
+        {
+          "type": "radiogroup",
+          "name": "stage4_contract_clause_library_3",
+          "title": "To what degree have you implemented an AI-enhanced library of standard and fallback clauses that can be easily maintained and configured?",
+          "isRequired": true,
+          "choices": [
+            {
+              "value": 1,
+              "text": "No formal clause library; clauses copied from existing contracts"
+            },
+            {
+              "value": 2,
+              "text": "Basic collection of standard clauses without systematic organization"
+            },
+            {
+              "value": 3,
+              "text": "Organized clause library with manual selection and implementation"
+            },
+            {
+              "value": 4,
+              "text": "Good clause management with categorization and moderate AI assistance"
+            },
+            {
+              "value": 5,
+              "text": "Comprehensive AI-enhanced clause library with automated suggestions, fallback options, and easy maintenance"
+            }
+          ],
+          "description": "Contract clause library"
+        },
+        {
+          "type": "radiogroup",
+          "name": "stage4_contract_templates_4",
+          "title": "How effectively does your organization create and configure templates with multi-variable logic to include or exclude standard and fallback clauses?",
+          "isRequired": true,
+          "choices": [
+            {
+              "value": 1,
+              "text": "No standardized templates; contracts created from scratch or previous examples"
+            },
+            {
+              "value": 2,
+              "text": "Basic static templates with minimal logic"
+            },
+            {
+              "value": 3,
+              "text": "Standard templates with some variable fields but limited conditional logic"
+            },
+            {
+              "value": 4,
+              "text": "Good template system with moderate conditional logic capabilities"
+            },
+            {
+              "value": 5,
+              "text": "Sophisticated user-configurable templates with multi-variable logic for dynamic clause inclusion/exclusion and fallback options"
+            }
+          ],
+          "description": "Contract templates"
+        },
+        {
+          "type": "radiogroup",
+          "name": "stage4_contract_authoring_5",
+          "title": "How comprehensively does your system support dynamic, AI-enhanced template utilization and no-code configurable workflows for new contract creation?",
+          "isRequired": true,
+          "choices": [
+            {
+              "value": 1,
+              "text": "Manual authoring with limited system support"
+            },
+            {
+              "value": 2,
+              "text": "Basic document creation tools with minimal intelligence"
+            },
+            {
+              "value": 3,
+              "text": "Template-based authoring with some workflow support but limited AI assistance"
+            },
+            {
+              "value": 4,
+              "text": "Good AI-supported authoring with standard workflows"
+            },
+            {
+              "value": 5,
+              "text": "Comprehensive dynamic, AI-enhanced authoring with fully configurable no-code workflows ensuring consistency and speed"
+            }
+          ],
+          "description": "Contract authoring"
+        },
+        {
+          "type": "radiogroup",
+          "name": "stage4_contract_obligations_analysis_6",
+          "title": "How comprehensively does your system analyze obligations across all contracts to enable sophisticated scenario planning?",
+          "isRequired": true,
+          "choices": [
+            {
+              "value": 1,
+              "text": "No systematic obligations analysis"
+            },
+            {
+              "value": 2,
+              "text": "Basic manual tracking of key obligations"
+            },
+            {
+              "value": 3,
+              "text": "Standardized obligation identification with limited cross-contract analysis"
+            },
+            {
+              "value": 4,
+              "text": "Good automated obligation extraction with basic scenario analysis"
+            },
+            {
+              "value": 5,
+              "text": "Comprehensive AI-enhanced obligation analysis across the entire contract portfolio enabling sophisticated scenario planning"
+            }
+          ],
+          "description": "Contract obligations analysis"
+        },
+        {
+          "type": "radiogroup",
+          "name": "stage4_contract_entitlements_analysis_7",
+          "title": "To what extent does your system provide AI-enhanced analysis and comparison of entitlements across your entire contract portfolio?",
+          "isRequired": true,
+          "choices": [
+            {
+              "value": 1,
+              "text": "No systematic entitlements analysis"
+            },
+            {
+              "value": 2,
+              "text": "Manual identification of basic entitlements"
+            },
+            {
+              "value": 3,
+              "text": "Standardized entitlement extraction with limited cross-contract comparison"
+            },
+            {
+              "value": 4,
+              "text": "Good automated entitlement identification with basic comparison capabilities"
+            },
+            {
+              "value": 5,
+              "text": "Advanced AI-enhanced analysis and comparison of entitlements across the entire contract portfolio"
+            }
+          ],
+          "description": "Contract entitlements analysis"
+        },
+        {
+          "type": "radiogroup",
+          "name": "stage4_self_service_contracting_8",
+          "title": "How effectively does your system provide simple interfaces for non-Legal users to request, monitor, and access contracts and negotiations?",
+          "isRequired": true,
+          "choices": [
+            {
+              "value": 1,
+              "text": "No self-service capabilities; all requests through legal department"
+            },
+            {
+              "value": 2,
+              "text": "Basic request forms but limited visibility into status"
+            },
+            {
+              "value": 3,
+              "text": "Standardized request process with status updates but limited access to documents"
+            },
+            {
+              "value": 4,
+              "text": "Good self-service portal with request tracking and document access"
+            },
+            {
+              "value": 5,
+              "text": "Comprehensive self-service interfaces allowing non-legal users to easily request, monitor status, and access appropriate contract documents"
+            }
+          ],
+          "description": "Self-service contracting"
+        },
+        {
+          "type": "radiogroup",
+          "name": "stage4_versioning_and_change_management_9",
+          "title": "How systematically does your organization track, store, and manage contract revisions and updates throughout their lifecycle?",
+          "isRequired": true,
+          "choices": [
+            {
+              "value": 1,
+              "text": "No formal versioning; difficult to determine current version"
+            },
+            {
+              "value": 2,
+              "text": "Basic manual version control with limited historical tracking"
+            },
+            {
+              "value": 3,
+              "text": "Systematic version tracking but with manual processes for updates"
+            },
+            {
+              "value": 4,
+              "text": "Automated version control with clear history and change tracking"
+            },
+            {
+              "value": 5,
+              "text": "Comprehensive version management with automatic tracking, comparison capabilities, and full lifecycle documentation"
+            }
+          ],
+          "description": "Versioning and change management"
+        }
+      ]
+    },
+    {
+      "name": "stage_5",
+      "title": "Stage 5: Contract Intelligence",
+      "elements": [
+        {
+          "type": "radiogroup",
+          "name": "stage5_contract_reporting_analytics_1",
+          "title": "How effectively does your system provide configurable reports and dashboards to surface data, trends, and opportunities for process improvement?",
+          "isRequired": true,
+          "choices": [
+            {
+              "value": 1,
+              "text": "No systematic reporting capabilities"
+            },
+            {
+              "value": 2,
+              "text": "Basic predefined reports with minimal customization"
+            },
+            {
+              "value": 3,
+              "text": "Standard reporting with some configuration options"
+            },
+            {
+              "value": 4,
+              "text": "Good reporting tools with user-configurable dashboards"
+            },
+            {
+              "value": 5,
+              "text": "Comprehensive no-code configurable reporting and analytics with sophisticated dashboards highlighting data trends and improvement opportunities"
+            }
+          ],
+          "description": "Contract reporting & analytics"
+        },
+        {
+          "type": "radiogroup",
+          "name": "stage5_contract_risk_scoring_2",
+          "title": "To what degree have you implemented AI-enhanced, configurable risk scoring based on both industry standards and internal requirements?",
+          "isRequired": true,
+          "choices": [
+            {
+              "value": 1,
+              "text": "No risk scoring capabilities"
+            },
+            {
+              "value": 2,
+              "text": "Basic manual risk assessment without consistent methodology"
+            },
+            {
+              "value": 3,
+              "text": "Standardized risk assessment methodology but manually applied"
+            },
+            {
+              "value": 4,
+              "text": "Automated risk scoring based on predefined rules with limited configurability"
+            },
+            {
+              "value": 5,
+              "text": "AI-enhanced risk scoring that's fully configurable, incorporating both industry standards and internal requirements"
+            }
+          ],
+          "description": "Contract risk scoring"
+        },
+        {
+          "type": "radiogroup",
+          "name": "stage5_contract_digitization_3",
+          "title": "How effectively does your system automate the ingestion and digitization of contracts with AI-enhanced data analysis, review, and extraction?",
+          "isRequired": true,
+          "choices": [
+            {
+              "value": 1,
+              "text": "Manual data entry from paper contracts"
+            },
+            {
+              "value": 2,
+              "text": "Basic document scanning with minimal data extraction"
+            },
+            {
+              "value": 3,
+              "text": "Standardized digitization process with semi-automated data extraction"
+            },
+            {
+              "value": 4,
+              "text": "Good automated ingestion with reliable data extraction"
+            },
+            {
+              "value": 5,
+              "text": "Advanced AI-enhanced digitization with high-quality data analysis, comprehensive review, and accurate extraction"
+            }
+          ],
+          "description": "Contract digitization"
+        },
+        {
+          "type": "radiogroup",
+          "name": "stage5_automated_contract_review_4",
+          "title": "How effectively does your system use AI to identify and extract key data, perform initial risk and compliance reviews, and suggest standardized language alternatives?",
+          "isRequired": true,
+          "choices": [
+            {
+              "value": 1,
+              "text": "Entirely manual contract review"
+            },
+            {
+              "value": 2,
+              "text": "Basic checklist-driven review without AI assistance"
+            },
+            {
+              "value": 3,
+              "text": "Semi-automated review with limited data extraction"
+            },
+            {
+              "value": 4,
+              "text": "Good AI-assisted review with reliable data extraction and basic risk identification"
+            },
+            {
+              "value": 5,
+              "text": "Comprehensive AI-enriched contract review with advanced data extraction, thorough risk and compliance assessment, and intelligent language suggestions"
+            }
+          ],
+          "description": "Automated contract review"
+        },
+        {
+          "type": "radiogroup",
+          "name": "stage5_advanced_search_filtering_5",
+          "title": "How comprehensive are your system's search capabilities in meeting different user needs and exposing contract data to authorized personnel?",
+          "isRequired": true,
+          "choices": [
+            {
+              "value": 1,
+              "text": "Basic filename search only"
+            },
+            {
+              "value": 2,
+              "text": "Full-text search with limited filtering options"
+            },
+            {
+              "value": 3,
+              "text": "Standard search with moderate filtering by common metadata"
+            },
+            {
+              "value": 4,
+              "text": "Advanced search with good filtering options and saved search capabilities"
+            },
+            {
+              "value": 5,
+              "text": "Comprehensive search capabilities with multiple options, advanced filtering, and personalized search experiences for different user needs"
+            }
+          ],
+          "description": "Advanced search & filtering"
+        },
+        {
+          "type": "radiogroup",
+          "name": "stage5_spend_cost_analysis_6",
+          "title": "How effectively is your contract system integrated with financial systems to analyze spending effectiveness?",
+          "isRequired": true,
+          "choices": [
+            {
+              "value": 1,
+              "text": "No integration between contract and financial systems"
+            },
+            {
+              "value": 2,
+              "text": "Manual export/import between systems with limited analysis"
+            },
+            {
+              "value": 3,
+              "text": "Basic integration with standard financial reports"
+            },
+            {
+              "value": 4,
+              "text": "Good integration with moderate spend analysis capabilities"
+            },
+            {
+              "value": 5,
+              "text": "Seamless integration with comprehensive spend and cost analysis capabilities"
+            }
+          ],
+          "description": "Spend & cost analysis"
+        },
+        {
+          "type": "radiogroup",
+          "name": "stage5_obligations_management_7",
+          "title": "How well does your system automatically track, identify, and alert users to key obligations, including status updates and milestone-triggered workflows?",
+          "isRequired": true,
+          "choices": [
+            {
+              "value": 1,
+              "text": "No systematic obligation tracking"
+            },
+            {
+              "value": 2,
+              "text": "Manual list of key obligations without system support"
+            },
+            {
+              "value": 3,
+              "text": "Basic obligation tracking with limited automation"
+            },
+            {
+              "value": 4,
+              "text": "Good automated obligation identification with status tracking"
+            },
+            {
+              "value": 5,
+              "text": "Comprehensive automated tracking with sophisticated notification rules and workflow triggers for all key obligations and milestones"
+            }
+          ],
+          "description": "Obligations management"
+        }
+      ]
+    },
+    {
+      "name": "stage_6",
+      "title": "Stage 6: Contract Execution",
+      "elements": [
+        {
+          "type": "radiogroup",
+          "name": "stage6_integration_with_enterprise_systems_1",
+          "title": "How extensively does your CLM system connect with other enterprise systems through APIs, connectors, or built-in integration platforms?",
+          "isRequired": true,
+          "choices": [
+            {
+              "value": 1,
+              "text": "No integration with other enterprise systems"
+            },
+            {
+              "value": 2,
+              "text": "Basic manual data exchange with limited systems"
+            },
+            {
+              "value": 3,
+              "text": "Moderate integration with key systems using basic connectors"
+            },
+            {
+              "value": 4,
+              "text": "Good API-based integration with most enterprise systems"
+            },
+            {
+              "value": 5,
+              "text": "Comprehensive integration ecosystem with APIs, pre-built connectors, and iPaaS options connecting to all key adjacent systems"
+            }
+          ],
+          "description": "Integration with enterprise systems"
+        },
+        {
+          "type": "radiogroup",
+          "name": "stage6_data_1st_capability_2",
+          "title": "To what degree does your system treat the data within contracts as the primary unit of information rather than the document itself?",
+          "isRequired": true,
+          "choices": [
+            {
+              "value": 1,
+              "text": "Document-centric approach with minimal structured data"
+            },
+            {
+              "value": 2,
+              "text": "Basic metadata but primarily document-focused"
+            },
+            {
+              "value": 3,
+              "text": "Moderate structured data extraction with document-oriented storage"
+            },
+            {
+              "value": 4,
+              "text": "Good data extraction with both document and data accessibility"
+            },
+            {
+              "value": 5,
+              "text": "True data-first architecture where contract data is the primary information unit with robust data hierarchy and relationships"
+            }
+          ],
+          "description": "Data-1st capability"
+        },
+        {
+          "type": "radiogroup",
+          "name": "stage6_milestone_tracking_3",
+          "title": "How comprehensively does your system monitor key contract events and automatically trigger appropriate workflows or notifications?",
+          "isRequired": true,
+          "choices": [
+            {
+              "value": 1,
+              "text": "No systematic milestone tracking"
+            },
+            {
+              "value": 2,
+              "text": "Basic date tracking requiring manual monitoring"
+            },
+            {
+              "value": 3,
+              "text": "Automated reminders for key dates without workflow integration"
+            },
+            {
+              "value": 4,
+              "text": "Good milestone monitoring with basic workflow triggers"
+            },
+            {
+              "value": 5,
+              "text": "Comprehensive automated monitoring with sophisticated notification rules and workflow initiation for all key events"
+            }
+          ],
+          "description": "Milestone tracking"
+        },
+        {
+          "type": "radiogroup",
+          "name": "stage6_obligation_tracking_4",
+          "title": "To what extent does your system automatically identify and expose key obligations by all counterparties to contracts?",
+          "isRequired": true,
+          "choices": [
+            {
+              "value": 1,
+              "text": "No systematic tracking of counterparty obligations"
+            },
+            {
+              "value": 2,
+              "text": "Manual identification of major counterparty commitments"
+            },
+            {
+              "value": 3,
+              "text": "Basic tracking of key counterparty obligations with limited automation"
+            },
+            {
+              "value": 4,
+              "text": "Good automated identification of most counterparty obligations"
+            },
+            {
+              "value": 5,
+              "text": "Comprehensive automated identification and tracking of all counterparty obligations across the contract portfolio"
+            }
+          ],
+          "description": "Obligation tracking"
+        },
+        {
+          "type": "radiogroup",
+          "name": "stage6_contract_hierarchy_and_relationship_mapping_5",
+          "title": "How effectively does your system present related contracts to ensure users have a complete view of dependencies and relationships?",
+          "isRequired": true,
+          "choices": [
+            {
+              "value": 1,
+              "text": "No relationship tracking between contracts"
+            },
+            {
+              "value": 2,
+              "text": "Manual notation of basic relationships"
+            },
+            {
+              "value": 3,
+              "text": "Standard relationship types with manual association"
+            },
+            {
+              "value": 4,
+              "text": "Good automated relationship identification with basic visualization"
+            },
+            {
+              "value": 5,
+              "text": "Comprehensive hierarchy and relationship mapping with user-friendly visualization of all dependencies"
+            }
+          ],
+          "description": "Contract hierarchy and relationship mapping"
+        },
+        {
+          "type": "radiogroup",
+          "name": "stage6_legal_entity_management_6",
+          "title": "How well does your system support configurable entity creation and tracking to enable contract aggregation at the entity level?",
+          "isRequired": true,
+          "choices": [
+            {
+              "value": 1,
+              "text": "No entity management capabilities"
+            },
+            {
+              "value": 2,
+              "text": "Basic list of entities without systematic association to contracts"
+            },
+            {
+              "value": 3,
+              "text": "Standard entity records with manual contract association"
+            },
+            {
+              "value": 4,
+              "text": "Good entity management with reliable contract linkage"
+            },
+            {
+              "value": 5,
+              "text": "Comprehensive user-configurable entity management enabling sophisticated aggregation and analysis at entity level"
+            }
+          ],
+          "description": "Legal entity management"
+        },
+        {
+          "type": "radiogroup",
+          "name": "stage6_esg_compliance_7",
+          "title": "How well does your system support monitoring and reporting for internal guidelines or external regulations related to Environmental, Social, and Governance (ESG) goals?",
+          "isRequired": true,
+          "choices": [
+            {
+              "value": 1,
+              "text": "No ESG-specific capabilities"
+            },
+            {
+              "value": 2,
+              "text": "Manual tracking of basic ESG commitments with no systematic approach"
+            },
+            {
+              "value": 3,
+              "text": "Standardized ESG clauses but limited monitoring or reporting"
+            },
+            {
+              "value": 4,
+              "text": "Good ESG clause library with basic monitoring and reporting capabilities"
+            },
+            {
+              "value": 5,
+              "text": "Comprehensive, configurable ESG compliance monitoring with automated clause implementation and sophisticated reporting"
+            }
+          ],
+          "description": "ESG compliance"
+        }
+      ]
+    }
+  ],
+  "showProgressBar": "both",
+  "progressBarType": "pages",
+  "showQuestionNumbers": "on",
+  "questionsOnPageMode": "standard",
+  "showCompletedPage": false,
+  "completedHtml": ""
+}
