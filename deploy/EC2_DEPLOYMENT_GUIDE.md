@@ -7,7 +7,7 @@
 1. **Go to AWS EC2 Console** → Launch Instance
 2. **Configure:**
    - **Name:** `clm-survey-server`
-   - **OS:** Ubuntu Server 22.04 LTS
+   - **OS:** Ubuntu Server 22.04 LTS **OR** Amazon Linux 2023
    - **Instance Type:** t2.micro (free) or t3.small (recommended)
    - **Key Pair:** Create/select key pair (save .pem file!)
    - **Security Group:** Allow ports 22, 80, 443, 3000
@@ -19,15 +19,23 @@
 # Set key permissions
 chmod 400 your-key.pem
 
-# Connect
+# For Ubuntu
 ssh -i your-key.pem ubuntu@YOUR_EC2_IP
+
+# For Amazon Linux
+ssh -i your-key.pem ec2-user@YOUR_EC2_IP
 ```
 
 ### 3. Run Setup Script
 
+#### For Ubuntu:
 ```bash
-# Download and run the setup script
 curl -fsSL https://raw.githubusercontent.com/hjtapia74/clmvaluemap/main/deploy/ec2-setup.sh | bash
+```
+
+#### For Amazon Linux:
+```bash
+curl -fsSL https://raw.githubusercontent.com/hjtapia74/clmvaluemap/main/deploy/ec2-setup-amazon-linux.sh | bash
 ```
 
 **OR manually:**
@@ -36,8 +44,12 @@ curl -fsSL https://raw.githubusercontent.com/hjtapia74/clmvaluemap/main/deploy/e
 # Clone this repo first
 git clone https://github.com/hjtapia74/clmvaluemap.git
 cd clmvaluemap/deploy
-chmod +x ec2-setup.sh
-./ec2-setup.sh
+
+# For Ubuntu
+chmod +x ec2-setup.sh && ./ec2-setup.sh
+
+# For Amazon Linux
+chmod +x ec2-setup-amazon-linux.sh && ./ec2-setup-amazon-linux.sh
 ```
 
 ### 4. Access Your Application
@@ -61,11 +73,19 @@ After setup completes, visit: `http://YOUR_EC2_IP`
 
 ### Application Management
 ```bash
+# For Ubuntu
 pm2 status                    # Check app status
 pm2 logs clm-survey          # View logs
 pm2 restart clm-survey       # Restart app
 pm2 stop clm-survey          # Stop app
 pm2 start clm-survey         # Start app
+
+# For Amazon Linux (run as ec2-user)
+sudo -u ec2-user pm2 status                    # Check app status
+sudo -u ec2-user pm2 logs clm-survey          # View logs
+sudo -u ec2-user pm2 restart clm-survey       # Restart app
+sudo -u ec2-user pm2 stop clm-survey          # Stop app
+sudo -u ec2-user pm2 start clm-survey         # Start app
 ```
 
 ### Nginx Management
@@ -78,7 +98,12 @@ sudo systemctl restart nginx  # Restart nginx
 ### Updates
 ```bash
 cd /var/www/clm-survey
+
+# For Ubuntu
 ./deploy/update-app.sh        # Update to latest version
+
+# For Amazon Linux
+./deploy/update-app-amazon-linux.sh
 ```
 
 ## 🔒 Security Considerations
