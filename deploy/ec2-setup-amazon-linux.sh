@@ -28,9 +28,18 @@ sudo npm install -g pm2
 
 # Install nginx for reverse proxy
 echo "📦 Installing Nginx..."
-sudo amazon-linux-extras install -y nginx1
-# For Amazon Linux 2023, use dnf instead:
-# sudo dnf install -y nginx
+# Try different methods for different Amazon Linux versions
+if command -v dnf >/dev/null 2>&1; then
+    # Amazon Linux 2023
+    sudo dnf install -y nginx
+elif command -v amazon-linux-extras >/dev/null 2>&1; then
+    # Amazon Linux 2
+    sudo amazon-linux-extras install -y nginx1
+else
+    # Fallback - install from EPEL
+    sudo yum install -y epel-release
+    sudo yum install -y nginx
+fi
 
 # Install git
 echo "📦 Installing Git..."
@@ -55,9 +64,19 @@ cd clm-survey
 echo "📦 Installing Node.js dependencies..."
 sudo -u ec2-user npm install
 
-# Build the application
+# Create swap file for build process (needed for t2.micro)
+echo "💾 Creating swap space for build process..."
+if [ ! -f /swapfile ]; then
+    sudo dd if=/dev/zero of=/swapfile bs=1M count=1024
+    sudo chmod 600 /swapfile
+    sudo mkswap /swapfile
+    sudo swapon /swapfile
+    echo "✅ 1GB swap space created"
+fi
+
+# Build the application with memory limit
 echo "🔨 Building application..."
-sudo -u ec2-user npm run build
+sudo -u ec2-user bash -c "cd /var/www/clm-survey && NODE_OPTIONS='--max-old-space-size=768' npm run build"
 
 # Create PM2 ecosystem file
 echo "⚙️ Creating PM2 configuration..."
@@ -89,6 +108,11 @@ sudo -u ec2-user mkdir -p /var/www/clm-survey/logs
 
 # Configure Nginx
 echo "⚙️ Configuring Nginx..."
+
+# Create conf.d directory if it doesn't exist
+sudo mkdir -p /etc/nginx/conf.d
+
+# Create nginx configuration
 sudo tee /etc/nginx/conf.d/clm-survey.conf > /dev/null << 'EOF'
 server {
     listen 80;
@@ -112,9 +136,23 @@ EOF
 sudo rm -f /etc/nginx/conf.d/default.conf
 
 # Test and start Nginx
-sudo nginx -t
-sudo systemctl enable nginx
-sudo systemctl start nginx
+if command -v nginx >/dev/null 2>&1; then
+    echo "✅ Nginx installed successfully"
+    sudo nginx -t
+    sudo systemctl enable nginx
+    sudo systemctl start nginx
+
+    # Check if nginx started successfully
+    if sudo systemctl is-active --quiet nginx; then
+        echo "✅ Nginx started successfully"
+    else
+        echo "⚠️ Nginx installation completed but service failed to start"
+        echo "You may need to configure it manually"
+    fi
+else
+    echo "❌ Nginx installation failed"
+    echo "You can install it manually later with: sudo dnf install -y nginx"
+fi
 
 # Start the application with PM2 as ec2-user
 echo "🚀 Starting application with PM2..."
