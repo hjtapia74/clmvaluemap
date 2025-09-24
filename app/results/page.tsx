@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import dynamic from 'next/dynamic';
 import {
@@ -23,7 +23,7 @@ import { SurveyResultsSummary, SurveySession } from '@/lib/db/models';
 // Dynamically import Plotly
 const Plot = dynamic(() => import('react-plotly.js'), { ssr: false });
 
-export default function ResultsPage() {
+function ResultsContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const sessionId = searchParams.get('sessionId');
@@ -32,16 +32,6 @@ export default function ResultsPage() {
   const [results, setResults] = useState<SurveyResultsSummary[]>([]);
   const [session, setSession] = useState<SurveySession | null>(null);
   const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (!sessionId) {
-      setError('No session ID provided');
-      setLoading(false);
-      return;
-    }
-
-    loadResults();
-  }, [sessionId]);
 
   const loadResults = async () => {
     if (!sessionId) return;
@@ -88,6 +78,16 @@ export default function ResultsPage() {
     }
   };
 
+  useEffect(() => {
+    if (!sessionId) {
+      setError('No session ID provided');
+      setLoading(false);
+      return;
+    }
+
+    loadResults();
+  }, [sessionId]);
+
   const exportToCSV = () => {
     if (!results || results.length === 0) return;
 
@@ -114,9 +114,10 @@ export default function ResultsPage() {
   };
 
   const exportChartAsImage = () => {
-    // This will be handled by Plotly's built-in download button
-    const plotElement = document.querySelector('.js-plotly-plot') as any;
+    // This will be handled by Plotly built-in download button
+    const plotElement = document.querySelector('.js-plotly-plot') as HTMLElement & { _fullLayout?: unknown };
     if (plotElement && plotElement._fullLayout) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (window as any).Plotly.downloadImage(plotElement, {
         format: 'png',
         width: 1200,
@@ -217,7 +218,8 @@ export default function ResultsPage() {
     }
   ];
 
-  const radarLayout = {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const radarLayout: any = {
     polar: {
       radialaxis: {
         visible: true,
@@ -289,7 +291,7 @@ export default function ResultsPage() {
             <Alert.Content>
               <Alert.Title>Incomplete Assessment</Alert.Title>
               <Alert.Description>
-                You've completed {overallCompletion.toFixed(0)}% of the assessment.
+                You&apos;ve completed {overallCompletion.toFixed(0)}% of the assessment.
                 For more meaningful results, we recommend completing at least {Config.MIN_COMPLETION_FOR_MEANINGFUL}% of the questions.
               </Alert.Description>
             </Alert.Content>
@@ -353,6 +355,7 @@ export default function ResultsPage() {
             <Card.Body>
               <Box height="600px">
                 <Plot
+                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
                   data={radarData as any}
                   layout={radarLayout}
                   config={{
@@ -461,5 +464,20 @@ export default function ResultsPage() {
         </Card.Root>
       </VStack>
     </Container>
+  );
+}
+
+export default function ResultsPage() {
+  return (
+    <Suspense fallback={
+      <Container maxW="container.xl" py={8}>
+        <VStack gap={4}>
+          <Spinner size="xl" />
+          <Text>Loading...</Text>
+        </VStack>
+      </Container>
+    }>
+      <ResultsContent />
+    </Suspense>
   );
 }

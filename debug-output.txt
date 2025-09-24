@@ -1,0 +1,178 @@
+==================================================================
+🔍 CLM Survey Bus Error Diagnostic Script
+==================================================================
+
+[0;34m📋 1. System Information[0m
+----------------------------------------
+Hostname: ip-172-31-28-236.ec2.internal
+Kernel: 6.1.144-170.251.amzn2023.x86_64
+Architecture: x86_64
+OS: Amazon Linux 2023.8.20250721
+Uptime:  02:39:34 up  2:27
+
+[0;34m📋 2. Hardware Information[0m
+----------------------------------------
+CPU Info:
+processor	: 0
+model name	: Intel(R) Xeon(R) Platinum 8259CL CPU @ 2.50GHz
+cpu cores	: 1
+processor	: 1
+
+Memory Info:
+               total        used        free      shared  buff/cache   available
+Mem:           1.9Gi       460Mi        88Mi       0.0Ki       1.3Gi       1.3Gi
+Swap:          2.0Gi        11Mi       2.0Gi
+
+Disk Info:
+/dev/nvme0n1p1   16G   12G  4.6G  72% /
+
+[0;34m📋 3. Hardware Error Check[0m
+----------------------------------------
+[0;32m✅ No hardware errors found in dmesg[0m
+
+[0;34m📋 4. Node.js Environment[0m
+----------------------------------------
+Node.js version: v20.19.5
+npm version: 10.8.2
+Node.js executable: /usr/bin/node
+npm executable: /usr/bin/npm
+
+Node.js basic test:
+✅ Node.js basic test passed
+[0;32m✅ Node.js basic functionality working[0m
+
+[0;34m📋 5. Application Directory Analysis[0m
+----------------------------------------
+[0;32m✅ Application directory found: /var/www/clm-survey[0m
+Directory contents:
+total 488
+drwxr-xr-x.  11 ec2-user ec2-user  16384 Sep 24 02:39 .
+drwxr-xr-x.   3 root     root         24 Sep 23 23:35 ..
+drwxr-xr-x.   7 ec2-user ec2-user    147 Sep 23 23:43 .git
+-rw-r--r--.   1 ec2-user ec2-user    544 Sep 23 23:43 .gitignore
+-rw-r--r--.   1 ec2-user ec2-user    478 Sep 23 23:43 .server.log
+-rw-r--r--.   1 ec2-user ec2-user      6 Sep 23 23:43 .server.pid
+-rw-r--r--.   1 ec2-user ec2-user   8752 Sep 23 23:43 CLAUDE.md
+-rw-r--r--.   1 ec2-user ec2-user   2554 Sep 23 23:43 README.md
+drwxr-xr-x.   4 ec2-user ec2-user    148 Sep 23 23:43 app
+
+Package.json exists: Yes
+node_modules exists: Yes
+.next exists: No (not built)
+
+Package.json preview:
+{
+  "name": "agiloft-clmvaluemap_sqlite",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint"
+  },
+  "dependencies": {
+    "@chakra-ui/react": "^3.27.0",
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.1",
+    "better-sqlite3": "^12.4.1",
+
+
+[0;34m📋 6. Dependencies and Native Modules Check[0m
+----------------------------------------
+Native modules (.node files):
+[1;33m⚠️  Found 6 native modules:[0m
+node_modules/@img/sharp-linux-x64/lib/sharp-linux-x64.node
+node_modules/@img/sharp-linuxmusl-x64/lib/sharp-linuxmusl-x64.node
+node_modules/@next/swc-linux-x64-gnu/next-swc.linux-x64-gnu.node
+node_modules/@next/swc-linux-x64-musl/next-swc.linux-x64-musl.node
+node_modules/@unrs/resolver-binding-linux-x64-gnu/resolver.linux-x64-gnu.node
+
+SQLite3 module test:
+✅ better-sqlite3 loads correctly
+[0;32m✅ SQLite module working[0m
+
+[0;34m📋 7. Next.js Environment Check[0m
+----------------------------------------
+Next.js info:
+bash: line 140: 11203 Bus error               (core dumped) npx next info 2> /dev/null
+[1;33m⚠️  Next.js info command failed[0m
+
+Next.js configuration:
+[1;33m⚠️  No Next.js config file found[0m
+
+[0;34m📋 8. Memory and Swap Analysis[0m
+----------------------------------------
+Memory usage:
+               total        used        free      shared  buff/cache   available
+Mem:           1.9Gi       454Mi       420Mi       0.0Ki       1.0Gi       1.3Gi
+Swap:          2.0Gi        11Mi       2.0Gi
+
+Swap status:
+NAME      TYPE SIZE  USED PRIO
+/swapfile file   2G 11.8M   -2
+
+Available memory for Node.js:
+Available memory: 1291MB
+[0;32m✅ Adequate available memory (1291MB)[0m
+
+[0;34m📋 9. Process and Load Analysis[0m
+----------------------------------------
+Current load average:
+ 02:45:29 up  2:33,  1 user,  load average: 22.00, 18.44, 14.33
+
+Top memory consumers:
+USER         PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+ec2-user   11369  0.5  6.2 11731172 121768 ?     Sl   02:42   0:01 next-server (v15.5.3)
+root       11383 19.8  5.2 111612 102496 ?       RNs  02:42   0:39 /usr/lib/systemd/systemd-coredump
+ec2-user   11301  0.2  2.8 1103320 56408 ?       Sl   02:42   0:00 npm start
+ec2-user    1514  0.0  2.7 1039368 52780 ?       Ssl  00:12   0:03 PM2 v6.0.13: God Daemon (/home/ec2-user/.pm2)
+root         839  0.0  2.4  86488 47844 ?        Ss   00:12   0:02 /usr/lib/systemd/systemd-journald
+
+Node.js processes currently running:
+root         790  0.0  0.0      0     0 ?        I<   00:12   0:00 [xfs-inodegc/nvm]
+
+[0;34m📋 10. Build Test with Detailed Logging[0m
+----------------------------------------
+Testing TypeScript compilation first:
+[0;31m❌ TypeScript compilation test failed or timed out[0m
+
+Testing Next.js build with verbose logging:
+Command: NODE_OPTIONS='--trace-warnings --max-old-space-size=1024' npm run build
+bash: line 235: 11606 Bus error               timeout 120 sudo -u ec2-user NODE_OPTIONS='--trace-warnings --max-old-space-size=1024' npm run build > build-test.log 2>&1
+[0;31m❌ Build test failed with exit code: 135[0m
+Build output (last 20 lines):
+
+> agiloft-clmvaluemap_sqlite@0.1.0 build
+> next build
+
+
+Error analysis:
+
+[0;34m📋 11. System Resources During Test[0m
+----------------------------------------
+Memory usage after test:
+               total        used        free      shared  buff/cache   available
+Mem:           1.9Gi       451Mi       421Mi       0.0Ki       1.0Gi       1.3Gi
+Swap:          2.0Gi        11Mi       2.0Gi
+
+Disk usage:
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/nvme0n1p1   16G   12G  4.6G  72% /
+
+[0;34m📋 12. Recommendations[0m
+----------------------------------------
+Based on the analysis above, here are the recommended next steps:
+
+🔧 NATIVE MODULES: Try rebuilding native modules with 'npm rebuild'
+🔧 ALTERNATIVE: Try building in development mode: 'npm run dev'
+🔧 FALLBACK: Use pre-built version or build on a more powerful machine
+
+[0;34m📋 Diagnostic Complete[0m
+----------------------------------------
+Log files created:
+- build-test.log (if build was attempted)
+
+To share this output, run:
+curl -fsSL https://raw.githubusercontent.com/hjtapia74/clmvaluemap/main/deploy/debug-bus-error.sh | bash > debug-output.txt 2>&1
+==================================================================
