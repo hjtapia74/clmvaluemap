@@ -22,6 +22,28 @@ const customConfig = defineConfig({
       colors: {
         agiloft: agiloftPalette,
       }
+    },
+    semanticTokens: {
+      colors: {
+        'agiloft.solid': {
+          value: { _light: '#263A5C', _dark: '#4a6994' }
+        },
+        'agiloft.contrast': {
+          value: { _light: 'white', _dark: 'white' }
+        },
+        'agiloft.fg': {
+          value: { _light: '#263A5C', _dark: '#7a9cd4' }
+        },
+        'agiloft.muted': {
+          value: { _light: '#e8ebf0', _dark: '#1e2e4b' }
+        },
+        'agiloft.subtle': {
+          value: { _light: '#f4f6f8', _dark: '#1a2842' }
+        },
+        'agiloft.emphasized': {
+          value: { _light: '#a0acbf', _dark: '#5e7091' }
+        }
+      }
     }
   }
 })
