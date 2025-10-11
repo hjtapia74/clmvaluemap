@@ -251,24 +251,41 @@ function ResultsContent() {
     : 0;
 
   return (
-    <Container maxW="container.xl" py={8}>
+    <Container maxW="container.xl" py={8} px={{ base: 4, md: 6 }}>
       <VStack gap={8} align="stretch">
         {/* Header */}
-        <HStack justify="space-between" align="center">
+        <VStack gap={4} align="stretch">
           <HStack>
             <Box
               as="img"
               src={colorMode === 'dark' ? Config.LOGO_URL_DARK : Config.LOGO_URL_LIGHT}
               alt="Agiloft"
               h="40px"
-              mr={10}
+              mr={{ base: 4, md: 10 }}
             />
             <VStack align="start" gap={0}>
-              <Heading size="lg">{Config.APP_TITLE}</Heading>
+              <Heading size={{ base: "md", md: "lg" }}>{Config.APP_TITLE}</Heading>
               <Text fontSize="sm" color="gray.600">{Config.APP_SUBTITLE}</Text>
             </VStack>
           </HStack>
-          <HStack gap={3}>
+
+          {/* Action Buttons - Stack on mobile, row on desktop */}
+          <VStack gap={3} align="stretch" display={{ base: "flex", md: "none" }}>
+            <Button onClick={backToSurvey} colorPalette="orange" size="md" px={6} py={3} w="100%">
+              ← Edit Answers
+            </Button>
+            <Button onClick={startNewSurvey} colorPalette="green" variant="outline" size="md" px={6} py={3} w="100%">
+              Start New Survey
+            </Button>
+            <Button onClick={exportToCSV} colorPalette="blue" variant="outline" size="md" px={6} py={3} w="100%">
+              Export CSV
+            </Button>
+            <Button onClick={exportChartAsImage} colorPalette="blue" size="md" px={6} py={3} w="100%">
+              Export Chart
+            </Button>
+          </VStack>
+
+          <HStack gap={3} display={{ base: "none", md: "flex" }}>
             <Button onClick={backToSurvey} colorPalette="orange" size="md" px={6} py={3}>
               ← Edit Answers
             </Button>
@@ -283,7 +300,7 @@ function ResultsContent() {
               Export Chart
             </Button>
           </HStack>
-        </HStack>
+        </VStack>
 
         {/* Session Info */}
         {session && (
