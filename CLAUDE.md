@@ -266,3 +266,59 @@ Always validate component usage with the Chakra UI MCP server when available.
 - Database queries tested via direct connection
 - Session recovery tested across applications
 - Export functionality verified for CSV and images
+
+## Recent Updates
+
+### Dark Mode Support (2025-10-11)
+- ✅ Implemented comprehensive dark mode with automatic system theme detection
+- ✅ Added dark/light mode logo switching (SVG for light, PNG for dark)
+- ✅ Created SurveyJS dark mode CSS overrides (`components/Survey.css`)
+- ✅ Updated semantic color tokens throughout the application
+- ✅ Fixed stage progress banner text colors for better readability
+- ✅ Added user email and name display in sidebar session info
+- ✅ Improved button padding on results page
+- ✅ Added proper padding to progress cards
+- ✅ Removed duplicate session ID from main page header
+- ✅ Sidebar navigation now shows session info with email and name
+
+### Responsive Design Updates (2025-10-11)
+- ✅ Results page buttons stack vertically on mobile devices
+- ✅ Added responsive margins to containers (smaller on mobile, larger on desktop)
+- ✅ Logo margin and heading size adjust for mobile screens
+- ✅ Full-width buttons on mobile for better touch targets
+- ✅ Horizontal layout maintained on desktop/tablet screens
+
+### Theme Configuration (`lib/theme.ts`)
+Semantic color tokens for dark mode:
+- `agiloft.fg`: Main foreground color (changes in dark mode)
+- `agiloft.solid`: Primary button background
+- `agiloft.muted`: Subtle backgrounds
+- `bg.subtle`: Background for containers
+- `fg.muted`: Muted text color
+- `border.subtle`: Border colors
+
+### Deployment Process
+Application is deployed on AWS EC2 (Amazon Linux):
+- Instance ID: `i-0abb7acc30beb3e77`
+- Public IP: `34.229.169.173`
+- Deployment script: `./deploy/update-app-amazon-linux.sh`
+- Managed with PM2 process manager
+- Automated deployment updates:
+  1. Backup database
+  2. Pull from GitHub
+  3. Install dependencies
+  4. Build application
+  5. Restart PM2 process
+
+### EC2 Deployment Commands
+```bash
+# Connect via EC2 Instance Connect
+aws ec2-instance-connect send-ssh-public-key \
+  --instance-id i-0abb7acc30beb3e77 \
+  --instance-os-user ec2-user \
+  --availability-zone us-east-1b
+
+# Deploy updates
+ssh ec2-user@34.229.169.173 \
+  "cd /var/www/clm-survey && ./deploy/update-app-amazon-linux.sh"
+```
