@@ -3,6 +3,8 @@ export const Config = {
   APP_TITLE: 'CLM Self-Assessment',
   APP_SUBTITLE: 'Enterprise Contract Lifecycle Management Maturity Assessment',
   LOGO_URL: 'https://www.agiloft.com/wp-content/themes/agiloft/assets/build/images/site-logo.svg',
+  LOGO_URL_LIGHT: '/images/agiloft-logo-light.svg',
+  LOGO_URL_DARK: '/images/agiloft-logo-dark.png',
   LOGO_URL_LARGE: 'https://higherlogicdownload.s3.amazonaws.com/AGILOFT/46412d73-e4f2-4abc-83be-9887a0cf006a/UploadedImages/Agiloft_Signature_Rev_Color_RGB.png',
 
   // Survey Configuration

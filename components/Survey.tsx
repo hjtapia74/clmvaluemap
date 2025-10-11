@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import { Model } from 'survey-core';
 import { Survey } from 'survey-react-ui';
 import 'survey-core/survey-core.min.css';
+import './Survey.css';
 import {
   Box,
   Container,
@@ -18,6 +19,7 @@ import {
   Alert,
   Dialog
 } from '@chakra-ui/react';
+import { useColorMode } from '@/components/ui/color-mode';
 import { Config } from '@/lib/config';
 import {
   generateSessionId,
@@ -51,6 +53,7 @@ interface SurveyComponentProps {
 }
 
 export default function SurveyComponent({ onComplete, initialSessionId }: SurveyComponentProps) {
+  const { colorMode } = useColorMode();
   const [survey, setSurvey] = useState<Model | null>(null);
   const [sessionId, setSessionId] = useState<string>(initialSessionId || '');
   const [userInfo, setUserInfo] = useState<{ email: string; company: string } | null>(null);
@@ -104,9 +107,6 @@ export default function SurveyComponent({ onComplete, initialSessionId }: Survey
     // Apply Agiloft branding colors
     model.applyTheme({
       cssVariables: {
-        '--sjs-general-backcolor': Config.COLORS.gray[50],
-        '--sjs-general-backcolor-dim': Config.COLORS.gray[100],
-        '--sjs-general-forecolor': Config.COLORS.gray[800],
         '--sjs-primary-backcolor': Config.COLORS.primary,
         '--sjs-primary-forecolor': '#FFFFFF',
         '--sjs-secondary-backcolor': Config.COLORS.secondary,
@@ -651,6 +651,8 @@ export default function SurveyComponent({ onComplete, initialSessionId }: Survey
           stageProgresses={stageProgresses}
           overallProgress={overallProgress}
           sessionId={sessionId}
+          userEmail={userInfo?.email}
+          userName={sessionData?.respondent_name}
           onStageSelect={handleStageSelect}
           onResultsSelect={handleResultsSelect}
           isOpen={sidebarOpen}
@@ -693,22 +695,24 @@ export default function SurveyComponent({ onComplete, initialSessionId }: Survey
                 ☰
               </Button>
             )}
-            <Box as="img" src={Config.LOGO_URL} alt="Agiloft" h="40px" mr={10} />
+            <Box
+              as="img"
+              src={colorMode === 'dark' ? Config.LOGO_URL_DARK : Config.LOGO_URL_LIGHT}
+              alt="Agiloft"
+              h="40px"
+              mr={10}
+            />
             <VStack align="start" spacing={0}>
-              <Heading size="lg">{Config.APP_TITLE}</Heading>
-              <Text fontSize="sm" color="gray.600">{Config.APP_SUBTITLE}</Text>
+              <Text fontSize="lg" fontWeight="bold" color="agiloft.fg">{Config.APP_TITLE}</Text>
+              <Text fontSize="sm" color="fg.muted">{Config.APP_SUBTITLE}</Text>
             </VStack>
           </HStack>
-          {/* Debug info */}
-          {sessionId && (
-            <Text fontSize="xs" color="gray.500">Session: {sessionId.substring(0, 8)}...</Text>
-          )}
         </HStack>
 
         {/* Overall Progress */}
         {sessionId && (
           <Card.Root maxW="800px" w="100%">
-            <Card.Body>
+            <Card.Body p={4}>
               <VStack align="stretch" spacing={3}>
                 <HStack justify="space-between">
                   <Text fontWeight="semibold">Overall Progress</Text>
@@ -744,6 +748,7 @@ export default function SurveyComponent({ onComplete, initialSessionId }: Survey
                         py={1}
                         borderRadius="md"
                         bg={progress === 100 ? 'green.100' : progress > 0 ? 'agiloft.100' : 'gray.100'}
+                        color={progress === 100 ? 'green.800' : progress > 0 ? 'agiloft.800' : 'gray.800'}
                         fontSize="xs"
                       >
                         {name.replace('CLM Stage ', 'S')}: {progress.toFixed(0)}%
@@ -863,8 +868,8 @@ export default function SurveyComponent({ onComplete, initialSessionId }: Survey
         )}
 
         {/* Survey */}
-        <Card.Root maxW="800px" w="100%">
-          <Card.Body>
+        <Card.Root maxW="800px" w="100%" bg={colorMode === 'dark' ? '#4A6587' : undefined}>
+          <Card.Body bg={colorMode === 'dark' ? '#4A6587' : undefined}>
             <Survey model={survey} />
           </Card.Body>
         </Card.Root>

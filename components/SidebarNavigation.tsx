@@ -33,6 +33,8 @@ interface SidebarNavigationProps {
   stageProgresses: Record<string, number>;
   overallProgress: number;
   sessionId: string;
+  userEmail?: string;
+  userName?: string;
   onStageSelect?: (pageIndex: number) => void;
   onResultsSelect?: () => void;
   isOpen?: boolean;
@@ -44,12 +46,13 @@ export default function SidebarNavigation({
   stageProgresses,
   overallProgress,
   sessionId,
+  userEmail,
+  userName,
   onStageSelect,
   onResultsSelect,
   isOpen = true,
   onClose
 }: SidebarNavigationProps) {
-
   // Get stage information from survey JSON
   const stages = Object.entries(Config.STAGE_RADAR_NAMES);
 
@@ -57,9 +60,9 @@ export default function SidebarNavigation({
     <Box
       w="300px"
       h="100vh"
-      bg="gray.50"
+      bg="bg.subtle"
       borderRight="1px solid"
-      borderColor="gray.200"
+      borderColor="border.subtle"
       position="fixed"
       left={isOpen ? "0" : "-300px"}
       top="0"
@@ -74,10 +77,10 @@ export default function SidebarNavigation({
         <Box>
           <HStack justify="space-between" align="center">
             <VStack align="start" gap={0}>
-              <Text fontSize="lg" fontWeight="bold" color="agiloft.500">
+              <Text fontSize="lg" fontWeight="bold" color="agiloft.fg">
                 CLM Self-Assessment
               </Text>
-              <Text fontSize="sm" color="agiloft.600">
+              <Text fontSize="sm" color="fg.muted">
                 Navigation & Progress
               </Text>
             </VStack>
@@ -94,7 +97,7 @@ export default function SidebarNavigation({
 
         {/* Overall Progress */}
         <Card.Root size="sm">
-          <Card.Body>
+          <Card.Body p={4}>
             <VStack gap={2} align="stretch">
               <HStack justify="space-between">
                 <Text fontSize="sm" fontWeight="medium">Overall Progress</Text>
@@ -115,7 +118,7 @@ export default function SidebarNavigation({
 
         {/* Stage Navigation */}
         <VStack gap={2} align="stretch">
-          <Text fontSize="md" fontWeight="semibold" color="agiloft.700">
+          <Text fontSize="md" fontWeight="semibold" color="fg.emphasized">
             Survey Stages
           </Text>
 
@@ -178,7 +181,7 @@ export default function SidebarNavigation({
 
         {/* Results Navigation */}
         <VStack gap={2} align="stretch">
-          <Text fontSize="md" fontWeight="semibold" color="agiloft.700">
+          <Text fontSize="md" fontWeight="semibold" color="fg.emphasized">
             Analysis
           </Text>
 
@@ -198,7 +201,7 @@ export default function SidebarNavigation({
               <Text fontSize="sm" fontWeight="medium">
                 View Results
               </Text>
-              <Text fontSize="xs" color="gray.500">
+              <Text fontSize="xs" color="fg.muted">
                 {overallProgress >= 80 ? 'Analysis Ready' : `${(100 - overallProgress).toFixed(0)}% remaining`}
               </Text>
             </VStack>
@@ -208,14 +211,36 @@ export default function SidebarNavigation({
         {/* Session Info */}
         <Box mt="auto" pt={4}>
           <Card.Root size="sm" variant="subtle">
-            <Card.Body>
-              <VStack gap={1} align="stretch">
-                <Text fontSize="xs" color="agiloft.600">
-                  Session ID
-                </Text>
-                <Text fontSize="xs" fontFamily="mono" color="agiloft.800">
-                  {sessionId.split('-')[0]}...
-                </Text>
+            <Card.Body p={4}>
+              <VStack gap={2} align="stretch">
+                <VStack gap={1} align="stretch">
+                  <Text fontSize="xs" color="fg.muted">
+                    Session ID
+                  </Text>
+                  <Text fontSize="xs" fontFamily="mono" color="fg">
+                    {sessionId.split('-')[0]}...
+                  </Text>
+                </VStack>
+                {userName && (
+                  <VStack gap={1} align="stretch">
+                    <Text fontSize="xs" color="fg.muted">
+                      Name
+                    </Text>
+                    <Text fontSize="xs" color="fg" wordBreak="break-word">
+                      {userName}
+                    </Text>
+                  </VStack>
+                )}
+                {userEmail && (
+                  <VStack gap={1} align="stretch">
+                    <Text fontSize="xs" color="fg.muted">
+                      Email
+                    </Text>
+                    <Text fontSize="xs" color="fg" wordBreak="break-word">
+                      {userEmail}
+                    </Text>
+                  </VStack>
+                )}
               </VStack>
             </Card.Body>
           </Card.Root>

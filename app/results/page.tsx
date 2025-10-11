@@ -16,6 +16,7 @@ import {
   Box,
   Alert
 } from '@chakra-ui/react';
+import { useColorMode } from '@/components/ui/color-mode';
 import { Config } from '@/lib/config';
 import { getSessionResults, getSession, calculateAndSaveResults } from '@/lib/api/client';
 import { SurveyResultsSummary, SurveySession } from '@/lib/db/models';
@@ -24,6 +25,7 @@ import { SurveyResultsSummary, SurveySession } from '@/lib/db/models';
 const Plot = dynamic(() => import('react-plotly.js'), { ssr: false });
 
 function ResultsContent() {
+  const { colorMode } = useColorMode();
   const searchParams = useSearchParams();
   const router = useRouter();
   const sessionId = searchParams.get('sessionId');
@@ -254,24 +256,30 @@ function ResultsContent() {
         {/* Header */}
         <HStack justify="space-between" align="center">
           <HStack>
-            <Box as="img" src={Config.LOGO_URL} alt="Agiloft" h="40px" mr={10} />
+            <Box
+              as="img"
+              src={colorMode === 'dark' ? Config.LOGO_URL_DARK : Config.LOGO_URL_LIGHT}
+              alt="Agiloft"
+              h="40px"
+              mr={10}
+            />
             <VStack align="start" gap={0}>
               <Heading size="lg">{Config.APP_TITLE}</Heading>
               <Text fontSize="sm" color="gray.600">{Config.APP_SUBTITLE}</Text>
             </VStack>
           </HStack>
           <HStack gap={3}>
-            <Button onClick={backToSurvey} colorPalette="orange" size="md">
+            <Button onClick={backToSurvey} colorPalette="orange" size="md" px={6} py={3}>
               ← Edit Answers
             </Button>
-            <Button onClick={startNewSurvey} colorPalette="green" variant="outline" size="md">
+            <Button onClick={startNewSurvey} colorPalette="green" variant="outline" size="md" px={6} py={3}>
               Start New Survey
             </Button>
             <Box w="1px" h="30px" bg="gray.300" />
-            <Button onClick={exportToCSV} colorPalette="blue" variant="outline" size="md">
+            <Button onClick={exportToCSV} colorPalette="blue" variant="outline" size="md" px={6} py={3}>
               Export CSV
             </Button>
-            <Button onClick={exportChartAsImage} colorPalette="blue" size="md">
+            <Button onClick={exportChartAsImage} colorPalette="blue" size="md" px={6} py={3}>
               Export Chart
             </Button>
           </HStack>

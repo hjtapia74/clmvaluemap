@@ -1,0 +1,129 @@
+/* Dark mode overrides for SurveyJS */
+.dark .sd-root-modern {
+  --sjs-general-backcolor: rgb(24, 24, 27);
+  --sjs-general-backcolor-dark: rgb(17, 17, 17);
+  --sjs-general-backcolor-dim: rgb(39, 39, 42);
+  --sjs-general-backcolor-dim-light: rgb(63, 63, 70);
+  --sjs-general-backcolor-dim-dark: rgb(24, 24, 27);
+  --sjs-general-forecolor: rgb(244, 244, 245);
+  --sjs-general-forecolor-light: rgb(212, 212, 216);
+  --sjs-general-dim-forecolor: rgb(161, 161, 170);
+  --sjs-general-dim-forecolor-light: rgb(113, 113, 122);
+  --sjs-primary-backcolor: #263A5C;
+  --sjs-primary-backcolor-light: #4a6994;
+  --sjs-primary-backcolor-dark: #1e2e4b;
+  --sjs-primary-forecolor: #FFFFFF;
+  --sjs-primary-forecolor-light: #FFFFFF;
+  --sjs-secondary-backcolor: #6366f1;
+  --sjs-secondary-forecolor: #FFFFFF;
+  --sjs-shadow-small: 0px 1px 2px 0px rgba(0, 0, 0, 0.3);
+  --sjs-shadow-medium: 0px 2px 6px 0px rgba(0, 0, 0, 0.3);
+  --sjs-shadow-large: 0px 8px 16px 0px rgba(0, 0, 0, 0.3);
+  --sjs-shadow-inner: inset 0px 1px 2px 0px rgba(0, 0, 0, 0.3);
+  --sjs-border-light: rgb(63, 63, 70);
+  --sjs-border-default: rgb(82, 82, 91);
+  --sjs-border-inside: rgb(63, 63, 70);
+  --sjs-special-red: #dc2626;
+  --sjs-special-red-light: #fca5a5;
+  --sjs-special-red-forecolor: #FFFFFF;
+  --sjs-special-green: #16a34a;
+  --sjs-special-green-light: #86efac;
+  --sjs-special-green-forecolor: #FFFFFF;
+  --sjs-special-blue: #2563eb;
+  --sjs-special-blue-light: #93c5fd;
+  --sjs-special-blue-forecolor: #FFFFFF;
+  --sjs-special-yellow: #ca8a04;
+  --sjs-special-yellow-light: #fde047;
+  --sjs-special-yellow-forecolor: #18181b;
+  --sjs-article-font-xx-large-textDecoration: none;
+  --sjs-article-font-xx-large-fontWeight: 700;
+  --sjs-article-font-xx-large-fontStyle: normal;
+  --sjs-article-font-xx-large-fontStretch: normal;
+  --sjs-article-font-xx-large-letterSpacing: 0;
+  --sjs-article-font-xx-large-lineHeight: 64px;
+  --sjs-article-font-xx-large-paragraphIndent: 0px;
+  --sjs-article-font-xx-large-textCase: none;
+  color: var(--sjs-general-forecolor);
+}
+
+.dark .sd-root-modern .sd-question__title {
+  color: var(--sjs-general-forecolor);
+}
+
+.dark .sd-root-modern .sd-question__description {
+  color: var(--sjs-general-dim-forecolor);
+}
+
+.dark .sd-root-modern .sd-input {
+  background-color: var(--sjs-general-backcolor-dim);
+  color: var(--sjs-general-forecolor);
+  border-color: var(--sjs-border-default);
+}
+
+.dark .sd-root-modern .sd-input:focus {
+  border-color: var(--sjs-primary-backcolor);
+}
+
+.dark .sd-root-modern .sd-page__title {
+  color: var(--sjs-general-forecolor);
+}
+
+.dark .sd-root-modern .sd-title {
+  color: #7a9cd4 !important;
+}
+
+.dark .sd-root-modern .sd-page__description {
+  color: var(--sjs-general-dim-forecolor);
+}
+
+.dark .sd-root-modern .sd-item__control-label {
+  color: var(--sjs-general-forecolor);
+}
+
+.dark .sd-root-modern .sd-progress__text {
+  color: var(--sjs-general-forecolor);
+}
+
+.dark .sd-root-modern .sd-navigation__complete-btn {
+  background-color: var(--sjs-primary-backcolor);
+  color: var(--sjs-primary-forecolor);
+}
+
+.dark .sd-root-modern .sd-navigation__complete-btn:hover {
+  background-color: var(--sjs-primary-backcolor-light);
+}
+
+.dark .sd-root-modern .sd-navigation__prev-btn,
+.dark .sd-root-modern .sd-navigation__next-btn {
+  color: var(--sjs-general-forecolor);
+  border-color: var(--sjs-border-default);
+}
+
+.dark .sd-root-modern .sd-navigation__prev-btn:hover,
+.dark .sd-root-modern .sd-navigation__next-btn:hover {
+  background-color: var(--sjs-general-backcolor-dim);
+}
+
+.dark .sd-root-modern .sd-panel {
+  background-color: var(--sjs-general-backcolor-dim);
+  border-color: var(--sjs-border-light);
+}
+
+.dark .sd-root-modern .sd-panel__title {
+  color: var(--sjs-general-forecolor);
+}
+
+.dark .sd-root-modern .sd-selectbase__item--selected {
+  background-color: var(--sjs-primary-backcolor);
+  color: var(--sjs-primary-forecolor);
+}
+
+.dark .sd-root-modern .sd-btn {
+  background-color: var(--sjs-general-backcolor-dim);
+  color: var(--sjs-general-forecolor);
+  border-color: var(--sjs-border-default);
+}
+
+.dark .sd-root-modern .sd-btn:hover {
+  background-color: var(--sjs-general-backcolor-dim-light);
+}
