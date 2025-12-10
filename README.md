@@ -10,6 +10,8 @@ A Next.js application for evaluating your organization's Contract Lifecycle Mana
 - **Progress tracking** across all survey stages
 - **Comprehensive results** with visualizations
 - **Email validation** to prevent duplicate surveys
+- **Admin dashboard** for managing surveys and viewing analytics
+- **Dark mode support** with system preference detection
 
 ## Tech Stack
 
@@ -19,6 +21,7 @@ A Next.js application for evaluating your organization's Contract Lifecycle Mana
 - **Chakra UI v3** for components
 - **SurveyJS** for survey engine
 - **Plotly** for results visualization
+- **bcrypt** for password hashing
 
 ## Installation
 
@@ -52,19 +55,28 @@ This version uses SQLite for data storage:
 
 ```
 ├── app/
+│   ├── admin/         # Admin dashboard pages
+│   │   ├── analytics/ # Analytics and charts
+│   │   ├── login/     # Admin login
+│   │   └── surveys/   # Survey management
 │   ├── api/           # API routes for database operations
+│   │   └── admin/     # Admin API endpoints
 │   ├── results/       # Results page
 │   └── page.tsx       # Main survey page
 ├── components/
+│   ├── admin/         # Admin UI components
 │   ├── Survey.tsx     # Main survey component
 │   └── SidebarNavigation.tsx
 ├── lib/
+│   ├── auth/          # Authentication logic
 │   ├── db/
 │   │   ├── connection.ts  # SQLite database connection
 │   │   └── models.ts      # TypeScript models
 │   ├── api/
-│   │   └── client.ts      # API client functions
+│   │   ├── client.ts      # API client functions
+│   │   └── adminClient.ts # Admin API client
 │   └── config.ts          # Application configuration
+├── middleware.ts      # Route protection
 └── data/
     └── surveyDefinition.json  # Survey questions
 ```
@@ -84,6 +96,41 @@ npm run build
 # Start production server
 npm run start
 ```
+
+## Admin Dashboard
+
+The application includes a protected admin area for managing surveys and viewing analytics.
+
+### Setup
+
+1. Create a `.env.local` file with admin credentials:
+```bash
+# Generate a password hash
+npx tsx scripts/generateAdminHash.ts yourpassword
+
+# Add to .env.local (escape $ characters with \)
+ADMIN_USERNAME=admin
+ADMIN_PASSWORD_HASH=\$2b\$10\$...your-hash-here...
+ADMIN_SESSION_SECRET=your-random-secret-here
+```
+
+2. Access the admin panel at `/admin/login`
+
+### Features
+
+- **Dashboard**: Overview with KPIs (total surveys, completion rates, recent activity)
+- **Surveys**: List, search, filter, and manage all survey submissions
+- **Survey Detail**: View individual responses, radar charts, and export data
+- **Analytics**: Charts for completion trends, stage scores, and rating distribution
+- **Export**: Download surveys and responses as CSV
+
+### Default Credentials
+
+For development, the default credentials are:
+- Username: `admin`
+- Password: `admin123`
+
+**Important**: Change these credentials in production!
 
 ## Key Differences from MySQL Version
 
