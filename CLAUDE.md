@@ -236,11 +236,11 @@ npm run start
 
 ## Future Enhancements (Documented)
 
-### Admin Dashboard
-- View all survey responses
-- Analytics and reporting
-- Export bulk data
-- User management
+### ~~Admin Dashboard~~ ✅ COMPLETED (2025-12-09)
+- ~~View all survey responses~~
+- ~~Analytics and reporting~~
+- ~~Export bulk data~~
+- User management (future: multiple admin users)
 
 ### Additional Features
 - Email notifications for incomplete surveys
@@ -300,7 +300,7 @@ Semantic color tokens for dark mode:
 ### Deployment Process
 Application is deployed on AWS EC2 (Amazon Linux):
 - Instance ID: `i-0abb7acc30beb3e77`
-- Public IP: `34.229.169.173`
+- Public IP: `34.201.151.219`
 - Deployment script: `./deploy/update-app-amazon-linux.sh`
 - Managed with PM2 process manager
 - Automated deployment updates:
@@ -312,15 +312,24 @@ Application is deployed on AWS EC2 (Amazon Linux):
 
 ### EC2 Deployment Commands
 ```bash
-# Connect via EC2 Instance Connect
+# Connect via EC2 Instance Connect (key expires after ~60 seconds)
 aws ec2-instance-connect send-ssh-public-key \
   --instance-id i-0abb7acc30beb3e77 \
   --instance-os-user ec2-user \
+  --ssh-public-key file://~/.ssh/id_ed25519.pub \
   --availability-zone us-east-1b
 
-# Deploy updates
-ssh ec2-user@34.229.169.173 \
+# Quick deploy (pull, build, restart)
+ssh ec2-user@34.201.151.219 \
+  "cd /var/www/clm-survey && git pull origin main && npm run build && pm2 restart clm-survey"
+
+# Or use deployment script (includes backup)
+ssh ec2-user@34.201.151.219 \
   "cd /var/www/clm-survey && ./deploy/update-app-amazon-linux.sh"
+
+# Manual database backup
+ssh ec2-user@34.201.151.219 \
+  "mkdir -p ~/backups && cp /var/www/clm-survey/survey.db ~/backups/survey_\$(date +%Y%m%d_%H%M%S).db"
 ```
 
 ### Admin Dashboard (2025-12-09)
@@ -381,3 +390,29 @@ ADMIN_SESSION_SECRET=<random-32-char-secret>
 - `/components/admin/` - Admin UI components
 - `/app/admin/` - Admin pages
 - `/middleware.ts` - Route protection
+
+#### Technical Notes
+
+**Completion Status Calculation**:
+The `is_completed` and `completion_percentage` fields in `survey_sessions` table are not updated by the survey app. Instead, completion is calculated dynamically from `stage_progress` table using subqueries in:
+- `getDashboardStats()` - for KPI counts
+- `getAllSessions()` - for survey list with accurate status
+- `getRecentSessions()` - for dashboard recent activity
+
+**Radar Chart**:
+Admin survey detail page includes all three benchmark traces:
+- Self Assessment (solid blue with fill)
+- Peer Average (dashed gray)
+- Best in Class (dotted green)
+
+**UI Padding**:
+Admin pages use consistent padding:
+- Layout provides `p={6}` to main content area
+- Card.Header uses `p={6}` for chart titles
+- Card.Body uses `pt={0} px={6} pb={6}` for content
+- StatsCard uses `p={6}` for KPI cards
+
+#### Known Issues Fixed
+1. **Surveys showing "In Progress" when completed**: Fixed by calculating completion from `stage_progress` table instead of relying on `survey_sessions.is_completed` field
+2. **Missing "Best in Class" on admin radar chart**: Added third trace to match public results page
+3. **bcrypt hash not working in .env.local**: Must escape `$` characters with `\$` in environment files
