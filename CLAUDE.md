@@ -322,3 +322,62 @@ aws ec2-instance-connect send-ssh-public-key \
 ssh ec2-user@34.229.169.173 \
   "cd /var/www/clm-survey && ./deploy/update-app-amazon-linux.sh"
 ```
+
+### Admin Dashboard (2025-12-09)
+A comprehensive administration module for managing surveys and viewing analytics.
+
+#### Features
+- **Authentication**: Environment variable-based login with bcrypt password hashing
+- **Dashboard** (`/admin`): Overview with KPIs, completion rates, recent activity
+- **Surveys** (`/admin/surveys`): List all surveys with search, filter, sort, pagination
+- **Survey Detail** (`/admin/surveys/[id]`): View responses, results radar chart, delete survey
+- **Analytics** (`/admin/analytics`): Charts for completion trends, stage scores, rating distribution
+- **Export**: CSV export for surveys and responses
+
+#### Admin Credentials
+Default credentials (change in production!):
+- Username: `admin`
+- Password: `admin123`
+
+To generate a new password hash:
+```bash
+npx tsx scripts/generateAdminHash.ts <your-password>
+```
+
+Then update `.env.local` (note: escape `$` with `\$`):
+```env
+ADMIN_USERNAME=admin
+ADMIN_PASSWORD_HASH=\$2b\$10\$<rest-of-hash>
+ADMIN_SESSION_SECRET=<random-32-char-secret>
+```
+
+**Important:** The `$` characters in bcrypt hashes must be escaped with backslashes in `.env.local` files.
+
+#### Admin Routes
+| Route | Description |
+|-------|-------------|
+| `/admin/login` | Login page |
+| `/admin` | Dashboard overview |
+| `/admin/surveys` | Survey list with filters |
+| `/admin/surveys/[id]` | Survey detail with responses |
+| `/admin/analytics` | Charts and statistics |
+
+#### Admin API Endpoints
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/api/admin/login` | POST | Authenticate admin |
+| `/api/admin/logout` | POST | Clear session |
+| `/api/admin/verify` | GET | Verify session |
+| `/api/admin/stats` | GET | Dashboard statistics |
+| `/api/admin/surveys` | GET | List surveys (paginated) |
+| `/api/admin/surveys/[id]` | GET/DELETE/PATCH | Survey CRUD |
+| `/api/admin/responses` | DELETE | Delete response |
+| `/api/admin/analytics` | GET | Analytics data |
+| `/api/admin/export` | GET | CSV export |
+
+#### Key Files
+- `/lib/auth/admin.ts` - Authentication logic
+- `/lib/api/adminClient.ts` - Client-side API wrapper
+- `/components/admin/` - Admin UI components
+- `/app/admin/` - Admin pages
+- `/middleware.ts` - Route protection

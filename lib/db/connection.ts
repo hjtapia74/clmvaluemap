@@ -113,6 +113,15 @@ function initializeSchema() {
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP
     );
 
+    CREATE TABLE IF NOT EXISTS admin_sessions (
+      session_id VARCHAR(64) PRIMARY KEY,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      expires_at DATETIME,
+      last_activity DATETIME DEFAULT CURRENT_TIMESTAMP,
+      ip_address VARCHAR(45),
+      user_agent TEXT
+    );
+
     CREATE INDEX IF NOT EXISTS idx_sessions_email ON survey_sessions(respondent_email);
     CREATE INDEX IF NOT EXISTS idx_sessions_company ON survey_sessions(company_name);
     CREATE INDEX IF NOT EXISTS idx_responses_session ON survey_responses(session_id);
@@ -395,4 +404,368 @@ export async function getUserSession(sessionToken: string): Promise<UserSession 
 
   const result = stmt.get(sessionToken) as UserSession | undefined;
   return result || null;
+}
+
+// ============================================
+// Admin Dashboard Functions
+// ============================================
+
+export interface AdminDashboardStats {
+  totalSurveys: number;
+  completedSurveys: number;
+  inProgressSurveys: number;
+  averageCompletion: number;
+  totalResponses: number;
+  surveysThisWeek: number;
+  surveysThisMonth: number;
+}
+
+export interface SurveyListOptions {
+  page?: number;
+  limit?: number;
+  search?: string;
+  status?: 'completed' | 'in_progress' | 'all';
+  sortBy?: 'created_at' | 'last_activity' | 'completion_percentage' | 'company_name';
+  sortOrder?: 'asc' | 'desc';
+}
+
+export interface SurveyListResult {
+  sessions: SurveySession[];
+  total: number;
+  page: number;
+  totalPages: number;
+}
+
+export interface SessionWithDetails {
+  session: SurveySession;
+  responses: SurveyResponse[];
+  progress: StageProgress[];
+  results: SurveyResultsSummary[];
+}
+
+export interface AnalyticsData {
+  completionRates: { date: string; count: number; completed: number }[];
+  stageScores: { stage: string; avgScore: number; count: number }[];
+  responseDistribution: { rating: number; count: number }[];
+  companySurveys: { company: string; count: number }[];
+}
+
+/**
+ * Get dashboard statistics
+ */
+export async function getDashboardStats(): Promise<AdminDashboardStats> {
+  const db = getDatabase();
+
+  // Total surveys
+  const totalStmt = db.prepare('SELECT COUNT(*) as count FROM survey_sessions');
+  const totalResult = totalStmt.get() as { count: number };
+
+  // Completed surveys
+  const completedStmt = db.prepare('SELECT COUNT(*) as count FROM survey_sessions WHERE is_completed = 1');
+  const completedResult = completedStmt.get() as { count: number };
+
+  // Average completion
+  const avgStmt = db.prepare('SELECT AVG(completion_percentage) as avg FROM survey_sessions');
+  const avgResult = avgStmt.get() as { avg: number | null };
+
+  // Total responses
+  const responsesStmt = db.prepare('SELECT COUNT(*) as count FROM survey_responses');
+  const responsesResult = responsesStmt.get() as { count: number };
+
+  // Surveys this week
+  const weekStmt = db.prepare(`
+    SELECT COUNT(*) as count FROM survey_sessions
+    WHERE created_at >= datetime('now', '-7 days')
+  `);
+  const weekResult = weekStmt.get() as { count: number };
+
+  // Surveys this month
+  const monthStmt = db.prepare(`
+    SELECT COUNT(*) as count FROM survey_sessions
+    WHERE created_at >= datetime('now', '-30 days')
+  `);
+  const monthResult = monthStmt.get() as { count: number };
+
+  return {
+    totalSurveys: totalResult.count,
+    completedSurveys: completedResult.count,
+    inProgressSurveys: totalResult.count - completedResult.count,
+    averageCompletion: avgResult.avg || 0,
+    totalResponses: responsesResult.count,
+    surveysThisWeek: weekResult.count,
+    surveysThisMonth: monthResult.count,
+  };
+}
+
+/**
+ * Get all sessions with pagination and filters
+ */
+export async function getAllSessions(options: SurveyListOptions = {}): Promise<SurveyListResult> {
+  const db = getDatabase();
+  const {
+    page = 1,
+    limit = 20,
+    search = '',
+    status = 'all',
+    sortBy = 'created_at',
+    sortOrder = 'desc',
+  } = options;
+
+  const offset = (page - 1) * limit;
+
+  // Build WHERE clause
+  const conditions: string[] = [];
+  const params: (string | number)[] = [];
+
+  if (search) {
+    conditions.push(`(company_name LIKE ? OR respondent_email LIKE ? OR respondent_name LIKE ?)`);
+    const searchPattern = `%${search}%`;
+    params.push(searchPattern, searchPattern, searchPattern);
+  }
+
+  if (status === 'completed') {
+    conditions.push('is_completed = 1');
+  } else if (status === 'in_progress') {
+    conditions.push('is_completed = 0');
+  }
+
+  const whereClause = conditions.length > 0 ? `WHERE ${conditions.join(' AND ')}` : '';
+
+  // Validate sortBy to prevent SQL injection
+  const validSortColumns = ['created_at', 'last_activity', 'completion_percentage', 'company_name'];
+  const safeSort = validSortColumns.includes(sortBy) ? sortBy : 'created_at';
+  const safeOrder = sortOrder === 'asc' ? 'ASC' : 'DESC';
+
+  // Get total count
+  const countStmt = db.prepare(`SELECT COUNT(*) as count FROM survey_sessions ${whereClause}`);
+  const countResult = countStmt.get(...params) as { count: number };
+  const total = countResult.count;
+
+  // Get paginated results
+  const dataStmt = db.prepare(`
+    SELECT * FROM survey_sessions
+    ${whereClause}
+    ORDER BY ${safeSort} ${safeOrder}
+    LIMIT ? OFFSET ?
+  `);
+  const sessions = dataStmt.all(...params, limit, offset) as SurveySession[];
+
+  return {
+    sessions,
+    total,
+    page,
+    totalPages: Math.ceil(total / limit),
+  };
+}
+
+/**
+ * Get session with all related data
+ */
+export async function getSessionWithDetails(sessionId: string): Promise<SessionWithDetails | null> {
+  const session = await getSession(sessionId);
+  if (!session) return null;
+
+  const responses = await getSessionResponses(sessionId);
+  const progress = await getSessionProgress(sessionId);
+  const results = await getSessionResults(sessionId);
+
+  return {
+    session,
+    responses,
+    progress,
+    results,
+  };
+}
+
+/**
+ * Delete a session and all related data (cascades via foreign keys)
+ */
+export async function deleteSessionById(sessionId: string): Promise<boolean> {
+  const db = getDatabase();
+
+  // Get session for audit log
+  const session = await getSession(sessionId);
+  if (!session) return false;
+
+  const stmt = db.prepare('DELETE FROM survey_sessions WHERE session_id = ?');
+  const result = stmt.run(sessionId);
+
+  // Log the deletion
+  await logOperation('survey_sessions', OperationType.DELETE, session, null, 'admin');
+
+  return result.changes > 0;
+}
+
+/**
+ * Delete a specific response
+ */
+export async function deleteResponseByKey(
+  sessionId: string,
+  stageName: string,
+  capability: string
+): Promise<boolean> {
+  const db = getDatabase();
+
+  // Get response for audit log
+  const getStmt = db.prepare(`
+    SELECT * FROM survey_responses
+    WHERE session_id = ? AND stage_name = ? AND capability = ?
+  `);
+  const response = getStmt.get(sessionId, stageName, capability) as SurveyResponse | undefined;
+
+  if (!response) return false;
+
+  const deleteStmt = db.prepare(`
+    DELETE FROM survey_responses
+    WHERE session_id = ? AND stage_name = ? AND capability = ?
+  `);
+  const result = deleteStmt.run(sessionId, stageName, capability);
+
+  // Log the deletion
+  await logOperation('survey_responses', OperationType.DELETE, response, null, 'admin');
+
+  return result.changes > 0;
+}
+
+/**
+ * Update session metadata
+ */
+export async function updateSessionMetadata(
+  sessionId: string,
+  updates: Partial<Pick<SurveySession, 'company_name' | 'respondent_name' | 'respondent_email'>>
+): Promise<boolean> {
+  const db = getDatabase();
+
+  // Get current session for audit log
+  const oldSession = await getSession(sessionId);
+  if (!oldSession) return false;
+
+  const updateFields: string[] = [];
+  const params: (string | number)[] = [];
+
+  if (updates.company_name !== undefined) {
+    updateFields.push('company_name = ?');
+    params.push(updates.company_name);
+  }
+  if (updates.respondent_name !== undefined) {
+    updateFields.push('respondent_name = ?');
+    params.push(updates.respondent_name);
+  }
+  if (updates.respondent_email !== undefined) {
+    updateFields.push('respondent_email = ?');
+    params.push(updates.respondent_email);
+  }
+
+  if (updateFields.length === 0) return false;
+
+  updateFields.push('updated_at = datetime(\'now\')');
+  params.push(sessionId);
+
+  const stmt = db.prepare(`
+    UPDATE survey_sessions
+    SET ${updateFields.join(', ')}
+    WHERE session_id = ?
+  `);
+  const result = stmt.run(...params);
+
+  // Log the update
+  const newSession = await getSession(sessionId);
+  await logOperation('survey_sessions', OperationType.UPDATE, oldSession, newSession, 'admin');
+
+  return result.changes > 0;
+}
+
+/**
+ * Get analytics data for charts
+ */
+export async function getAnalyticsData(): Promise<AnalyticsData> {
+  const db = getDatabase();
+
+  // Completion rates by day (last 30 days)
+  const completionStmt = db.prepare(`
+    SELECT
+      DATE(created_at) as date,
+      COUNT(*) as count,
+      SUM(CASE WHEN is_completed = 1 THEN 1 ELSE 0 END) as completed
+    FROM survey_sessions
+    WHERE created_at >= datetime('now', '-30 days')
+    GROUP BY DATE(created_at)
+    ORDER BY date ASC
+  `);
+  const completionRates = completionStmt.all() as { date: string; count: number; completed: number }[];
+
+  // Stage scores
+  const stageStmt = db.prepare(`
+    SELECT
+      stage_name as stage,
+      AVG(stage_average) as avgScore,
+      COUNT(*) as count
+    FROM survey_results_summary
+    GROUP BY stage_name
+    ORDER BY stage_name
+  `);
+  const stageScores = stageStmt.all() as { stage: string; avgScore: number; count: number }[];
+
+  // Response distribution (rating counts)
+  const ratingStmt = db.prepare(`
+    SELECT
+      rating,
+      COUNT(*) as count
+    FROM survey_responses
+    WHERE rating IS NOT NULL
+    GROUP BY rating
+    ORDER BY rating
+  `);
+  const responseDistribution = ratingStmt.all() as { rating: number; count: number }[];
+
+  // Surveys per company (top 10)
+  const companyStmt = db.prepare(`
+    SELECT
+      company_name as company,
+      COUNT(*) as count
+    FROM survey_sessions
+    WHERE company_name IS NOT NULL AND company_name != ''
+    GROUP BY company_name
+    ORDER BY count DESC
+    LIMIT 10
+  `);
+  const companySurveys = companyStmt.all() as { company: string; count: number }[];
+
+  return {
+    completionRates,
+    stageScores,
+    responseDistribution,
+    companySurveys,
+  };
+}
+
+/**
+ * Get recent sessions for dashboard
+ */
+export async function getRecentSessions(limit: number = 10): Promise<SurveySession[]> {
+  const db = getDatabase();
+  const stmt = db.prepare(`
+    SELECT * FROM survey_sessions
+    ORDER BY last_activity DESC
+    LIMIT ?
+  `);
+  return stmt.all(limit) as SurveySession[];
+}
+
+/**
+ * Export all survey data as objects for CSV generation
+ */
+export async function exportAllSurveyData(): Promise<{
+  sessions: SurveySession[];
+  responses: SurveyResponse[];
+}> {
+  const db = getDatabase();
+
+  const sessionsStmt = db.prepare('SELECT * FROM survey_sessions ORDER BY created_at DESC');
+  const sessions = sessionsStmt.all() as SurveySession[];
+
+  const responsesStmt = db.prepare('SELECT * FROM survey_responses ORDER BY session_id, stage_name');
+  const responses = responsesStmt.all() as SurveyResponse[];
+
+  return { sessions, responses };
 }
