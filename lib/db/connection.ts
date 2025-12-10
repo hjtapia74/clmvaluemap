@@ -452,6 +452,7 @@ export interface AnalyticsData {
 
 /**
  * Get dashboard statistics
+ * Calculates completion from stage_progress table for accurate stats
  */
 export async function getDashboardStats(): Promise<AdminDashboardStats> {
   const db = getDatabase();
@@ -460,13 +461,34 @@ export async function getDashboardStats(): Promise<AdminDashboardStats> {
   const totalStmt = db.prepare('SELECT COUNT(*) as count FROM survey_sessions');
   const totalResult = totalStmt.get() as { count: number };
 
-  // Completed surveys
-  const completedStmt = db.prepare('SELECT COUNT(*) as count FROM survey_sessions WHERE is_completed = 1');
-  const completedResult = completedStmt.get() as { count: number };
-
-  // Average completion
-  const avgStmt = db.prepare('SELECT AVG(completion_percentage) as avg FROM survey_sessions');
-  const avgResult = avgStmt.get() as { avg: number | null };
+  // Calculate completion stats from stage_progress
+  const completionStmt = db.prepare(`
+    SELECT
+      COUNT(*) as total_sessions,
+      SUM(CASE WHEN calc_is_completed = 1 THEN 1 ELSE 0 END) as completed_count,
+      AVG(calc_completion) as avg_completion
+    FROM (
+      SELECT
+        s.session_id,
+        CASE
+          WHEN COUNT(p.session_id) = 0 THEN 0
+          ELSE (SUM(CASE WHEN p.is_completed = 1 THEN 1 ELSE 0 END) * 100.0 / COUNT(p.session_id))
+        END as calc_completion,
+        CASE
+          WHEN COUNT(p.session_id) = 0 THEN 0
+          WHEN SUM(CASE WHEN p.is_completed = 1 THEN 1 ELSE 0 END) = COUNT(p.session_id) THEN 1
+          ELSE 0
+        END as calc_is_completed
+      FROM survey_sessions s
+      LEFT JOIN stage_progress p ON s.session_id = p.session_id
+      GROUP BY s.session_id
+    )
+  `);
+  const completionResult = completionStmt.get() as {
+    total_sessions: number;
+    completed_count: number;
+    avg_completion: number | null;
+  };
 
   // Total responses
   const responsesStmt = db.prepare('SELECT COUNT(*) as count FROM survey_responses');
@@ -488,9 +510,9 @@ export async function getDashboardStats(): Promise<AdminDashboardStats> {
 
   return {
     totalSurveys: totalResult.count,
-    completedSurveys: completedResult.count,
-    inProgressSurveys: totalResult.count - completedResult.count,
-    averageCompletion: avgResult.avg || 0,
+    completedSurveys: completionResult.completed_count || 0,
+    inProgressSurveys: totalResult.count - (completionResult.completed_count || 0),
+    averageCompletion: completionResult.avg_completion || 0,
     totalResponses: responsesResult.count,
     surveysThisWeek: weekResult.count,
     surveysThisMonth: monthResult.count,
@@ -499,6 +521,7 @@ export async function getDashboardStats(): Promise<AdminDashboardStats> {
 
 /**
  * Get all sessions with pagination and filters
+ * Calculates completion from stage_progress table for accurate status
  */
 export async function getAllSessions(options: SurveyListOptions = {}): Promise<SurveyListResult> {
   const db = getDatabase();
@@ -518,15 +541,16 @@ export async function getAllSessions(options: SurveyListOptions = {}): Promise<S
   const params: (string | number)[] = [];
 
   if (search) {
-    conditions.push(`(company_name LIKE ? OR respondent_email LIKE ? OR respondent_name LIKE ?)`);
+    conditions.push(`(s.company_name LIKE ? OR s.respondent_email LIKE ? OR s.respondent_name LIKE ?)`);
     const searchPattern = `%${search}%`;
     params.push(searchPattern, searchPattern, searchPattern);
   }
 
+  // Status filter based on calculated completion
   if (status === 'completed') {
-    conditions.push('is_completed = 1');
+    conditions.push('COALESCE(p.calc_completion, 0) >= 100');
   } else if (status === 'in_progress') {
-    conditions.push('is_completed = 0');
+    conditions.push('COALESCE(p.calc_completion, 0) < 100');
   }
 
   const whereClause = conditions.length > 0 ? `WHERE ${conditions.join(' AND ')}` : '';
@@ -534,18 +558,47 @@ export async function getAllSessions(options: SurveyListOptions = {}): Promise<S
   // Validate sortBy to prevent SQL injection
   const validSortColumns = ['created_at', 'last_activity', 'completion_percentage', 'company_name'];
   const safeSort = validSortColumns.includes(sortBy) ? sortBy : 'created_at';
+  // Map completion_percentage to calculated field
+  const sortColumn = safeSort === 'completion_percentage' ? 'calc_completion' : `s.${safeSort}`;
   const safeOrder = sortOrder === 'asc' ? 'ASC' : 'DESC';
 
+  // Subquery to calculate completion from stage_progress
+  const progressSubquery = `
+    SELECT
+      session_id,
+      CASE
+        WHEN COUNT(*) = 0 THEN 0
+        ELSE (SUM(CASE WHEN is_completed = 1 THEN 1 ELSE 0 END) * 100.0 / COUNT(*))
+      END as calc_completion,
+      CASE
+        WHEN COUNT(*) = 0 THEN 0
+        WHEN SUM(CASE WHEN is_completed = 1 THEN 1 ELSE 0 END) = COUNT(*) THEN 1
+        ELSE 0
+      END as calc_is_completed
+    FROM stage_progress
+    GROUP BY session_id
+  `;
+
   // Get total count
-  const countStmt = db.prepare(`SELECT COUNT(*) as count FROM survey_sessions ${whereClause}`);
+  const countStmt = db.prepare(`
+    SELECT COUNT(*) as count
+    FROM survey_sessions s
+    LEFT JOIN (${progressSubquery}) p ON s.session_id = p.session_id
+    ${whereClause}
+  `);
   const countResult = countStmt.get(...params) as { count: number };
   const total = countResult.count;
 
-  // Get paginated results
+  // Get paginated results with calculated completion
   const dataStmt = db.prepare(`
-    SELECT * FROM survey_sessions
+    SELECT
+      s.*,
+      COALESCE(p.calc_completion, 0) as completion_percentage,
+      COALESCE(p.calc_is_completed, 0) as is_completed
+    FROM survey_sessions s
+    LEFT JOIN (${progressSubquery}) p ON s.session_id = p.session_id
     ${whereClause}
-    ORDER BY ${safeSort} ${safeOrder}
+    ORDER BY ${sortColumn} ${safeOrder}
     LIMIT ? OFFSET ?
   `);
   const sessions = dataStmt.all(...params, limit, offset) as SurveySession[];
@@ -741,12 +794,36 @@ export async function getAnalyticsData(): Promise<AnalyticsData> {
 
 /**
  * Get recent sessions for dashboard
+ * Calculates completion from stage_progress table for accurate status
  */
 export async function getRecentSessions(limit: number = 10): Promise<SurveySession[]> {
   const db = getDatabase();
+
+  // Subquery to calculate completion from stage_progress
+  const progressSubquery = `
+    SELECT
+      session_id,
+      CASE
+        WHEN COUNT(*) = 0 THEN 0
+        ELSE (SUM(CASE WHEN is_completed = 1 THEN 1 ELSE 0 END) * 100.0 / COUNT(*))
+      END as calc_completion,
+      CASE
+        WHEN COUNT(*) = 0 THEN 0
+        WHEN SUM(CASE WHEN is_completed = 1 THEN 1 ELSE 0 END) = COUNT(*) THEN 1
+        ELSE 0
+      END as calc_is_completed
+    FROM stage_progress
+    GROUP BY session_id
+  `;
+
   const stmt = db.prepare(`
-    SELECT * FROM survey_sessions
-    ORDER BY last_activity DESC
+    SELECT
+      s.*,
+      COALESCE(p.calc_completion, 0) as completion_percentage,
+      COALESCE(p.calc_is_completed, 0) as is_completed
+    FROM survey_sessions s
+    LEFT JOIN (${progressSubquery}) p ON s.session_id = p.session_id
+    ORDER BY s.last_activity DESC
     LIMIT ?
   `);
   return stmt.all(limit) as SurveySession[];
