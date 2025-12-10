@@ -162,6 +162,15 @@ export default function SurveyDetailPage({ params }: PageProps) {
         line: { color: '#718096', dash: 'dash' as const },
         fillcolor: 'transparent',
       },
+      {
+        type: 'scatterpolar' as const,
+        r: [...Config.BENCHMARK_DATA.bestInClass.map(v => v * 10), Config.BENCHMARK_DATA.bestInClass[0] * 10],
+        theta: [...categories, categories[0]],
+        fill: 'toself',
+        name: 'Best in Class',
+        line: { color: Config.COLORS.success, dash: 'dot' as const },
+        fillcolor: 'transparent',
+      },
     ];
   };
 
