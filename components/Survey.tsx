@@ -1,9 +1,10 @@
 'use client';
 
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import { Model } from 'survey-core';
 import { Survey } from 'survey-react-ui';
 import 'survey-core/survey-core.min.css';
+import 'survey-core/i18n/spanish';
 import './Survey.css';
 import {
   Box,
@@ -21,6 +22,7 @@ import {
 } from '@chakra-ui/react';
 import { useColorMode } from '@/components/ui/color-mode';
 import { Config } from '@/lib/config';
+import { useLocale, getLocalizedStageNames } from '@/lib/i18n';
 import {
   generateSessionId,
   generateUserIdentifier,
@@ -40,8 +42,15 @@ import {
   getSession,
   calculateAndSaveResults
 } from '@/lib/api/client';
-import surveyDefinition from '@/data/surveyDefinition.json';
+import surveyDefinitionEn from '@/data/surveyDefinition.json';
+import surveyDefinitionEs from '@/data/surveyDefinition.es.json';
 import SidebarNavigation from './SidebarNavigation';
+import LanguageToggle from './LanguageToggle';
+
+const surveyDefinitions = {
+  en: surveyDefinitionEn,
+  es: surveyDefinitionEs,
+};
 
 interface SidebarState {
   isOpen: boolean;
@@ -54,6 +63,7 @@ interface SurveyComponentProps {
 
 export default function SurveyComponent({ onComplete, initialSessionId }: SurveyComponentProps) {
   const { colorMode } = useColorMode();
+  const { locale, t } = useLocale();
   const [survey, setSurvey] = useState<Model | null>(null);
   const [sessionId, setSessionId] = useState<string>(initialSessionId || '');
   const [userInfo, setUserInfo] = useState<{ email: string; company: string } | null>(null);
@@ -75,16 +85,23 @@ export default function SurveyComponent({ onComplete, initialSessionId }: Survey
   const [currentPageIndex, setCurrentPageIndex] = useState(0);
   const saveTimeoutRef = useRef<NodeJS.Timeout>();
 
-  // Build capability to question name mapping from survey definition
+  // Build capability to question name mapping from survey definition (using English definition for consistent storage)
   const capabilityToQuestionMap = useRef<Record<string, string>>({});
 
-  // Initialize survey model
-  useEffect(() => {
-    const model = new Model(surveyDefinition);
+  // Memoize the localized stage names
+  const localizedStageNames = useMemo(() => getLocalizedStageNames(locale), [locale]);
 
-    // Build the mapping from capability descriptions to question names
+  // Initialize survey model - rebuild when locale changes
+  useEffect(() => {
+    const currentDefinition = surveyDefinitions[locale];
+    const model = new Model(currentDefinition);
+
+    // Set SurveyJS locale for built-in UI elements
+    model.locale = locale === 'es' ? 'es' : 'en';
+
+    // Build the mapping from capability descriptions to question names (use English definition for consistent storage)
     const mapping: Record<string, string> = {};
-    surveyDefinition.pages.forEach((page: any) => {
+    surveyDefinitionEn.pages.forEach((page: any) => {
       page.elements.forEach((element: any) => {
         if (element.description && element.name) {
           // Map both versions - with and without markdown formatting
@@ -117,7 +134,7 @@ export default function SurveyComponent({ onComplete, initialSessionId }: Survey
     });
 
     setSurvey(model);
-  }, []);
+  }, [locale]);
 
   // Handle user info submission (from page 2)
   const handleUserInfoSubmit = useCallback(async (sender: Model) => {
@@ -263,12 +280,12 @@ export default function SurveyComponent({ onComplete, initialSessionId }: Survey
         setRecoveryError(''); // Clear any previous errors
         return true;
       } else {
-        setRecoveryError('Session not found. Please check your information or start a new survey.');
+        setRecoveryError('sessionNotFound'); // Will be translated in render
         return false;
       }
     } catch (error) {
       console.error('Failed to recover session:', error);
-      setRecoveryError('Failed to recover session. Please try again.');
+      setRecoveryError('failedToRecover'); // Will be translated in render
       return false;
     } finally {
       setLoading(false);
@@ -636,7 +653,7 @@ export default function SurveyComponent({ onComplete, initialSessionId }: Survey
     return (
       <Container maxW="container.xl" py={8}>
         <VStack spacing={4}>
-          <Text>Loading survey...</Text>
+          <Text>{t('loadingSurvey')}</Text>
         </VStack>
       </Container>
     );
@@ -703,10 +720,11 @@ export default function SurveyComponent({ onComplete, initialSessionId }: Survey
               mr={10}
             />
             <VStack align="start" spacing={0}>
-              <Text fontSize="lg" fontWeight="bold" color="agiloft.fg">{Config.APP_TITLE}</Text>
-              <Text fontSize="sm" color="fg.muted">{Config.APP_SUBTITLE}</Text>
+              <Text fontSize="lg" fontWeight="bold" color="agiloft.fg">{t('appTitle')}</Text>
+              <Text fontSize="sm" color="fg.muted">{t('appSubtitle')}</Text>
             </VStack>
           </HStack>
+          <LanguageToggle size="sm" />
         </HStack>
 
         {/* Overall Progress */}
@@ -715,9 +733,9 @@ export default function SurveyComponent({ onComplete, initialSessionId }: Survey
             <Card.Body p={4}>
               <VStack align="stretch" spacing={3}>
                 <HStack justify="space-between">
-                  <Text fontWeight="semibold">Overall Progress</Text>
+                  <Text fontWeight="semibold">{t('overallProgress')}</Text>
                   <Text fontSize="sm" color="gray.600">
-                    {overallProgress.toFixed(0)}% Complete
+                    {overallProgress.toFixed(0)}% {t('complete')}
                   </Text>
                 </HStack>
                 <Progress.Root value={overallProgress} size="sm" colorPalette="agiloft">
@@ -733,14 +751,15 @@ export default function SurveyComponent({ onComplete, initialSessionId }: Survey
                     size="sm"
                     onClick={() => window.location.href = `/results?sessionId=${sessionId}`}
                   >
-                    View Results & Analysis
+                    {t('viewResultsAnalysis')}
                   </Button>
                 )}
 
                 {/* Stage progress indicators */}
                 <HStack spacing={2} flexWrap="wrap">
-                  {Object.entries(Config.STAGE_RADAR_NAMES).map(([key, name]) => {
+                  {Object.entries(localizedStageNames).map(([key, name]) => {
                     const progress = stageProgresses[key] || 0;
+                    const stageNumber = key.split(':')[0];
                     return (
                       <Box
                         key={key}
@@ -751,7 +770,7 @@ export default function SurveyComponent({ onComplete, initialSessionId }: Survey
                         color={progress === 100 ? 'green.800' : progress > 0 ? 'agiloft.800' : 'gray.800'}
                         fontSize="xs"
                       >
-                        {name.replace('CLM Stage ', 'S')}: {progress.toFixed(0)}%
+                        {locale === 'es' ? `E${stageNumber}` : `S${stageNumber}`}: {progress.toFixed(0)}%
                       </Box>
                     );
                   })}
@@ -766,7 +785,7 @@ export default function SurveyComponent({ onComplete, initialSessionId }: Survey
           <Card.Root maxW="800px" w="100%">
             <Card.Header pb={showRecovery ? 0 : 4} px={6} pt={6}>
               <HStack justify="space-between">
-                <Heading size="md">Start or Resume Survey</Heading>
+                <Heading size="md">{t('startOrResumeSurvey')}</Heading>
                 <Button
                   variant="surface"
                   size="sm"
@@ -777,7 +796,7 @@ export default function SurveyComponent({ onComplete, initialSessionId }: Survey
                     setRecoveryError(''); // Clear error when toggling
                   }}
                 >
-                  {showRecovery ? 'Hide Recovery' : 'Resume Existing Survey'}
+                  {showRecovery ? t('hideRecovery') : t('resumeExistingSurvey')}
                 </Button>
               </HStack>
             </Card.Header>
@@ -785,25 +804,25 @@ export default function SurveyComponent({ onComplete, initialSessionId }: Survey
               <Card.Body px={6} py={4}>
                 <VStack spacing={4} align="stretch">
                   <Text fontSize="sm" color="gray.600">
-                    Recover your previous survey session by providing one of the following:
+                    {t('recoverPreviousSession')}
                   </Text>
 
                   {recoveryError && (
                     <Alert.Root status="error">
                       <Alert.Indicator />
                       <Alert.Content>
-                        <Alert.Description>{recoveryError}</Alert.Description>
+                        <Alert.Description>{t(recoveryError as any)}</Alert.Description>
                       </Alert.Content>
                     </Alert.Root>
                   )}
 
                   <VStack spacing={3} align="stretch">
                     <Box>
-                      <Text fontWeight="semibold" mb={2}>Email Address</Text>
+                      <Text fontWeight="semibold" mb={2}>{t('emailAddress')}</Text>
                       <HStack>
                         <Input
                           type="email"
-                          placeholder="Enter your email"
+                          placeholder={t('enterYourEmail')}
                           value={recoveryEmail}
                           onChange={(e) => setRecoveryEmail(e.target.value)}
                         />
@@ -814,17 +833,17 @@ export default function SurveyComponent({ onComplete, initialSessionId }: Survey
                           px={5}
                           py={2}
                         >
-                          Recover
+                          {t('recover')}
                         </Button>
                       </HStack>
                     </Box>
 
                     <Box>
-                      <Text fontWeight="semibold" mb={2}>Company Name</Text>
+                      <Text fontWeight="semibold" mb={2}>{t('companyName')}</Text>
                       <HStack>
                         <Input
                           type="text"
-                          placeholder="Enter your company name"
+                          placeholder={t('enterCompanyName')}
                           value={recoveryCompany}
                           onChange={(e) => setRecoveryCompany(e.target.value)}
                         />
@@ -835,17 +854,17 @@ export default function SurveyComponent({ onComplete, initialSessionId }: Survey
                           px={5}
                           py={2}
                         >
-                          Recover
+                          {t('recover')}
                         </Button>
                       </HStack>
                     </Box>
 
                     <Box>
-                      <Text fontWeight="semibold" mb={2}>Session ID</Text>
+                      <Text fontWeight="semibold" mb={2}>{t('sessionId')}</Text>
                       <HStack>
                         <Input
                           type="text"
-                          placeholder="Enter your session ID"
+                          placeholder={t('enterSessionId')}
                           value={recoverySessionId}
                           onChange={(e) => setRecoverySessionId(e.target.value)}
                         />
@@ -856,7 +875,7 @@ export default function SurveyComponent({ onComplete, initialSessionId }: Survey
                           px={5}
                           py={2}
                         >
-                          Recover
+                          {t('recover')}
                         </Button>
                       </HStack>
                     </Box>
@@ -883,12 +902,12 @@ export default function SurveyComponent({ onComplete, initialSessionId }: Survey
         <Dialog.Positioner>
           <Dialog.Content>
             <Dialog.Header>
-              <Dialog.Title>Multiple Sessions Found</Dialog.Title>
+              <Dialog.Title>{t('multipleSessionsFound')}</Dialog.Title>
             </Dialog.Header>
             <Dialog.Body>
               <VStack gap={4} align="stretch">
                 <Text fontSize="sm" color="gray.600">
-                  We found multiple survey sessions for {recoveryCompany}. Please select which one you'd like to continue:
+                  {t('selectSessionMessage', { company: recoveryCompany })}
                 </Text>
 
                 <VStack gap={2} align="stretch">
@@ -905,11 +924,11 @@ export default function SurveyComponent({ onComplete, initialSessionId }: Survey
                           <Text fontWeight="semibold">{session.respondent_email}</Text>
                           <Text fontSize="sm" color="gray.600">
                             {session.respondent_name && `${session.respondent_name} • `}
-                            Started: {new Date(session.created_at).toLocaleDateString()}
+                            {t('started')}: {new Date(session.created_at).toLocaleDateString()}
                           </Text>
                           <Text fontSize="xs" color="gray.500">
-                            Progress: {Number(session.completion_percentage || 0).toFixed(0)}% •
-                            Last activity: {new Date(session.last_activity || session.updated_at).toLocaleDateString()}
+                            {t('progress')}: {Number(session.completion_percentage || 0).toFixed(0)}% •
+                            {t('lastActivity')}: {new Date(session.last_activity || session.updated_at).toLocaleDateString()}
                           </Text>
                         </VStack>
                       </Card.Body>
@@ -923,7 +942,7 @@ export default function SurveyComponent({ onComplete, initialSessionId }: Survey
                 variant="outline"
                 onClick={() => setShowSessionSelector(false)}
               >
-                Cancel
+                {t('cancel')}
               </Button>
             </Dialog.Footer>
             <Dialog.CloseTrigger />
@@ -937,16 +956,16 @@ export default function SurveyComponent({ onComplete, initialSessionId }: Survey
         <Dialog.Positioner>
           <Dialog.Content>
             <Dialog.Header>
-              <Dialog.Title>Email Already Used</Dialog.Title>
+              <Dialog.Title>{t('emailAlreadyUsed')}</Dialog.Title>
             </Dialog.Header>
             <Dialog.Body>
               <VStack gap={4} align="stretch">
                 <Alert.Root status="warning">
                   <Alert.Indicator />
                   <Alert.Content>
-                    <Alert.Title>Existing Survey Found</Alert.Title>
+                    <Alert.Title>{t('existingSurveyFound')}</Alert.Title>
                     <Alert.Description>
-                      This email address already has a survey session. You can load the existing session or create a new one.
+                      {t('existingEmailMessage')}
                     </Alert.Description>
                   </Alert.Content>
                 </Alert.Root>
@@ -955,18 +974,18 @@ export default function SurveyComponent({ onComplete, initialSessionId }: Survey
                   <Card.Root variant="outline">
                     <Card.Body py={3}>
                       <VStack align="start" gap={2}>
-                        <Text fontWeight="semibold">Existing Session Details:</Text>
+                        <Text fontWeight="semibold">{t('existingSessionDetails')}</Text>
                         <Text fontSize="sm" color="gray.600">
-                          <strong>Email:</strong> {existingSession.respondent_email}
+                          <strong>{t('email')}:</strong> {existingSession.respondent_email}
                         </Text>
                         <Text fontSize="sm" color="gray.600">
-                          <strong>Company:</strong> {existingSession.company_name}
+                          <strong>{t('company')}:</strong> {existingSession.company_name}
                         </Text>
                         <Text fontSize="sm" color="gray.600">
-                          <strong>Progress:</strong> {Number(existingSession.completion_percentage || 0).toFixed(0)}%
+                          <strong>{t('progress')}:</strong> {Number(existingSession.completion_percentage || 0).toFixed(0)}%
                         </Text>
                         <Text fontSize="sm" color="gray.600">
-                          <strong>Last Activity:</strong> {new Date(existingSession.last_activity || existingSession.updated_at).toLocaleDateString()}
+                          <strong>{t('lastActivity')}:</strong> {new Date(existingSession.last_activity || existingSession.updated_at).toLocaleDateString()}
                         </Text>
                       </VStack>
                     </Card.Body>
@@ -974,7 +993,7 @@ export default function SurveyComponent({ onComplete, initialSessionId }: Survey
                 )}
 
                 <Text fontSize="sm" color="gray.600">
-                  What would you like to do?
+                  {t('whatWouldYouDo')}
                 </Text>
               </VStack>
             </Dialog.Body>
@@ -984,19 +1003,19 @@ export default function SurveyComponent({ onComplete, initialSessionId }: Survey
                   variant="outline"
                   onClick={() => setShowExistingEmailDialog(false)}
                 >
-                  Cancel
+                  {t('cancel')}
                 </Button>
                 <Button
                   colorPalette="agiloft"
                   onClick={handleLoadExistingSession}
                 >
-                  Load Existing Session
+                  {t('loadExistingSession')}
                 </Button>
                 <Button
                   colorPalette="orange"
                   onClick={handleCreateNewAnyway}
                 >
-                  Create New Anyway
+                  {t('createNewAnyway')}
                 </Button>
               </HStack>
             </Dialog.Footer>

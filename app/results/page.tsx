@@ -1,6 +1,6 @@
 'use client';
 
-import { Suspense, useEffect, useState } from 'react';
+import { Suspense, useEffect, useState, useMemo } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import dynamic from 'next/dynamic';
 import {
@@ -18,14 +18,17 @@ import {
 } from '@chakra-ui/react';
 import { useColorMode } from '@/components/ui/color-mode';
 import { Config } from '@/lib/config';
+import { useLocale, getLocalizedStageNames } from '@/lib/i18n';
 import { getSessionResults, getSession, calculateAndSaveResults } from '@/lib/api/client';
 import { SurveyResultsSummary, SurveySession } from '@/lib/db/models';
+import LanguageToggle from '@/components/LanguageToggle';
 
 // Dynamically import Plotly
 const Plot = dynamic(() => import('react-plotly.js'), { ssr: false });
 
 function ResultsContent() {
   const { colorMode } = useColorMode();
+  const { locale, t } = useLocale();
   const searchParams = useSearchParams();
   const router = useRouter();
   const sessionId = searchParams.get('sessionId');
@@ -34,6 +37,9 @@ function ResultsContent() {
   const [results, setResults] = useState<SurveyResultsSummary[]>([]);
   const [session, setSession] = useState<SurveySession | null>(null);
   const [error, setError] = useState<string | null>(null);
+
+  // Get localized stage names
+  const localizedStageNames = useMemo(() => getLocalizedStageNames(locale), [locale]);
 
   const loadResults = async () => {
     if (!sessionId) return;
@@ -149,7 +155,7 @@ function ResultsContent() {
       <Container maxW="container.xl" py={8}>
         <VStack gap={4}>
           <Spinner size="xl" />
-          <Text>Loading results...</Text>
+          <Text>{t('loadingResults')}</Text>
         </VStack>
       </Container>
     );
@@ -162,7 +168,7 @@ function ResultsContent() {
           <Alert.Root status="error">
             <Alert.Indicator />
             <Alert.Content>
-              <Alert.Title>Error</Alert.Title>
+              <Alert.Title>{t('error')}</Alert.Title>
               <Alert.Description>{error}</Alert.Description>
             </Alert.Content>
           </Alert.Root>
@@ -171,11 +177,11 @@ function ResultsContent() {
           <HStack justify="center" gap={4}>
             {sessionId && (
               <Button onClick={backToSurvey} colorPalette="blue" size="lg">
-                ← Back to Survey
+                ← {t('backToSurvey')}
               </Button>
             )}
             <Button onClick={startNewSurvey} colorPalette="green" variant="outline" size="lg">
-              Start New Survey
+              {t('startNewSurvey')}
             </Button>
           </HStack>
         </VStack>
@@ -190,31 +196,40 @@ function ResultsContent() {
     return Number(result?.stage_scaled_score) || 0;
   });
 
+  // Get localized short stage names for chart display
+  const localizedChartLabels = categories.map((_, idx) => {
+    const key = Object.keys(localizedStageNames)[idx];
+    const fullName = localizedStageNames[key];
+    return locale === 'es'
+      ? fullName.replace('Etapa CLM ', 'Etapa ')
+      : fullName.replace('CLM Stage ', 'Stage ');
+  });
+
   const radarData = [
     {
       type: 'scatterpolar',
       r: selfAssessmentScores,
-      theta: categories.map(s => s.replace('CLM Stage ', 'Stage ')),
+      theta: localizedChartLabels,
       fill: 'toself',
-      name: 'Self Assessment',
+      name: t('selfAssessment'),
       line: { color: Config.COLORS.primary },
       fillcolor: 'rgba(0, 69, 124, 0.2)'
     },
     {
       type: 'scatterpolar',
       r: Config.BENCHMARK_DATA.peerAverage.map(v => v * 10), // Scale to 0-100
-      theta: categories.map(s => s.replace('CLM Stage ', 'Stage ')),
+      theta: localizedChartLabels,
       fill: 'toself',
-      name: 'Peer Average',
+      name: t('peerAverage'),
       line: { color: Config.COLORS.warning },
       fillcolor: 'rgba(237, 137, 54, 0.1)'
     },
     {
       type: 'scatterpolar',
       r: Config.BENCHMARK_DATA.bestInClass.map(v => v * 10), // Scale to 0-100
-      theta: categories.map(s => s.replace('CLM Stage ', 'Stage ')),
+      theta: localizedChartLabels,
       fill: 'toself',
-      name: 'Best in Class',
+      name: t('bestInClass'),
       line: { color: Config.COLORS.success },
       fillcolor: 'rgba(72, 187, 120, 0.1)'
     }
@@ -236,7 +251,7 @@ function ResultsContent() {
       x: 0.85,
       y: 1
     },
-    title: 'CLM Maturity Assessment Results',
+    title: t('chartTitle'),
     font: {
       family: 'system-ui, -apple-system, sans-serif'
     }
@@ -255,49 +270,52 @@ function ResultsContent() {
       <VStack gap={8} align="stretch">
         {/* Header */}
         <VStack gap={4} align="stretch">
-          <HStack>
-            <Box
-              as="img"
-              src={colorMode === 'dark' ? Config.LOGO_URL_DARK : Config.LOGO_URL_LIGHT}
-              alt="Agiloft"
-              h="40px"
-              mr={{ base: 4, md: 10 }}
-            />
-            <VStack align="start" gap={0}>
-              <Heading size={{ base: "md", md: "lg" }}>{Config.APP_TITLE}</Heading>
-              <Text fontSize="sm" color="gray.600">{Config.APP_SUBTITLE}</Text>
-            </VStack>
+          <HStack justify="space-between" align="center">
+            <HStack>
+              <Box
+                as="img"
+                src={colorMode === 'dark' ? Config.LOGO_URL_DARK : Config.LOGO_URL_LIGHT}
+                alt="Agiloft"
+                h="40px"
+                mr={{ base: 4, md: 10 }}
+              />
+              <VStack align="start" gap={0}>
+                <Heading size={{ base: "md", md: "lg" }}>{t('appTitle')}</Heading>
+                <Text fontSize="sm" color="gray.600">{t('appSubtitle')}</Text>
+              </VStack>
+            </HStack>
+            <LanguageToggle size="sm" />
           </HStack>
 
           {/* Action Buttons - Stack on mobile, row on desktop */}
           <VStack gap={3} align="stretch" display={{ base: "flex", md: "none" }}>
             <Button onClick={backToSurvey} colorPalette="orange" size="md" px={6} py={3} w="100%">
-              ← Edit Answers
+              ← {t('editAnswers')}
             </Button>
             <Button onClick={startNewSurvey} colorPalette="green" variant="outline" size="md" px={6} py={3} w="100%">
-              Start New Survey
+              {t('startNewSurvey')}
             </Button>
             <Button onClick={exportToCSV} colorPalette="blue" variant="outline" size="md" px={6} py={3} w="100%">
-              Export CSV
+              {t('exportCsv')}
             </Button>
             <Button onClick={exportChartAsImage} colorPalette="blue" size="md" px={6} py={3} w="100%">
-              Export Chart
+              {t('exportChart')}
             </Button>
           </VStack>
 
           <HStack gap={3} display={{ base: "none", md: "flex" }}>
             <Button onClick={backToSurvey} colorPalette="orange" size="md" px={6} py={3}>
-              ← Edit Answers
+              ← {t('editAnswers')}
             </Button>
             <Button onClick={startNewSurvey} colorPalette="green" variant="outline" size="md" px={6} py={3}>
-              Start New Survey
+              {t('startNewSurvey')}
             </Button>
             <Box w="1px" h="30px" bg="gray.300" />
             <Button onClick={exportToCSV} colorPalette="blue" variant="outline" size="md" px={6} py={3}>
-              Export CSV
+              {t('exportCsv')}
             </Button>
             <Button onClick={exportChartAsImage} colorPalette="blue" size="md" px={6} py={3}>
-              Export Chart
+              {t('exportChart')}
             </Button>
           </HStack>
         </VStack>
@@ -314,10 +332,9 @@ function ResultsContent() {
           <Alert.Root status="warning">
             <Alert.Indicator />
             <Alert.Content>
-              <Alert.Title>Incomplete Assessment</Alert.Title>
+              <Alert.Title>{t('incompleteAssessment')}</Alert.Title>
               <Alert.Description>
-                You&apos;ve completed {overallCompletion.toFixed(0)}% of the assessment.
-                For more meaningful results, we recommend completing at least {Config.MIN_COMPLETION_FOR_MEANINGFUL}% of the questions.
+                {t('incompleteMessage', { percent: overallCompletion.toFixed(0), minPercent: Config.MIN_COMPLETION_FOR_MEANINGFUL })}
               </Alert.Description>
             </Alert.Content>
           </Alert.Root>
@@ -334,7 +351,7 @@ function ResultsContent() {
                   {overallAverage.toFixed(1)}
                 </Text>
                 <Text fontSize="sm" color="gray.600" fontWeight="medium">
-                  Overall Average (1-5)
+                  {t('overallAverage')}
                 </Text>
               </VStack>
             </Card.Body>
@@ -348,7 +365,7 @@ function ResultsContent() {
                   {((overallAverage - 1) * 25).toFixed(0)}
                 </Text>
                 <Text fontSize="sm" color="gray.600" fontWeight="medium">
-                  Scaled Score (0-100)
+                  {t('scaledScore')}
                 </Text>
               </VStack>
             </Card.Body>
@@ -362,7 +379,7 @@ function ResultsContent() {
                   {overallCompletion.toFixed(0)}%
                 </Text>
                 <Text fontSize="sm" color="gray.600" fontWeight="medium">
-                  Completion
+                  {t('completion')}
                 </Text>
               </VStack>
             </Card.Body>
@@ -375,7 +392,7 @@ function ResultsContent() {
           {/* Radar Chart */}
           <Card.Root>
             <Card.Header>
-              <Heading size="md">Radar Chart</Heading>
+              <Heading size="md">{t('radarChart')}</Heading>
             </Card.Header>
             <Card.Body>
               <Box height="600px">
@@ -402,19 +419,19 @@ function ResultsContent() {
           {/* Detailed Scores Table */}
           <Card.Root>
             <Card.Header>
-              <Heading size="md">Detailed Scores</Heading>
+              <Heading size="md">{t('detailedScores')}</Heading>
             </Card.Header>
             <Card.Body>
               <Table.Root>
                 <Table.Header>
                   <Table.Row>
-                    <Table.ColumnHeader>Stage</Table.ColumnHeader>
-                    <Table.ColumnHeader>Average (1-5)</Table.ColumnHeader>
-                    <Table.ColumnHeader>Scaled (0-100)</Table.ColumnHeader>
-                    <Table.ColumnHeader>Peer Avg</Table.ColumnHeader>
-                    <Table.ColumnHeader>Best in Class</Table.ColumnHeader>
-                    <Table.ColumnHeader>Gap to Peer</Table.ColumnHeader>
-                    <Table.ColumnHeader>Completion</Table.ColumnHeader>
+                    <Table.ColumnHeader>{t('stage')}</Table.ColumnHeader>
+                    <Table.ColumnHeader>{t('average15')}</Table.ColumnHeader>
+                    <Table.ColumnHeader>{t('scaled0100')}</Table.ColumnHeader>
+                    <Table.ColumnHeader>{t('peerAvg')}</Table.ColumnHeader>
+                    <Table.ColumnHeader>{t('bestInClass')}</Table.ColumnHeader>
+                    <Table.ColumnHeader>{t('gapToPeer')}</Table.ColumnHeader>
+                    <Table.ColumnHeader>{t('completion')}</Table.ColumnHeader>
                   </Table.Row>
                 </Table.Header>
                 <Table.Body>
@@ -430,7 +447,7 @@ function ResultsContent() {
 
                     return (
                       <Table.Row key={`table-${idx}-${stageName}`}>
-                        <Table.Cell>{stageName.replace('CLM Stage ', 'Stage ')}</Table.Cell>
+                        <Table.Cell>{localizedChartLabels[idx]}</Table.Cell>
                         <Table.Cell>{Number(result?.stage_average)?.toFixed(2) || 'N/A'}</Table.Cell>
                         <Table.Cell>{scaled.toFixed(0)}</Table.Cell>
                         <Table.Cell>{peerScaled.toFixed(0)}</Table.Cell>
@@ -453,7 +470,7 @@ function ResultsContent() {
         {/* Insights */}
         <Card.Root>
           <Card.Header>
-            <Heading size="md">Key Insights</Heading>
+            <Heading size="md">{t('keyInsights')}</Heading>
           </Card.Header>
           <Card.Body>
             <VStack align="stretch" gap={3}>
@@ -474,11 +491,11 @@ function ResultsContent() {
                   >
                     <Alert.Indicator />
                     <Alert.Content>
-                      <Alert.Title>{result.stage_name.replace('CLM Stage ', 'Stage ')}</Alert.Title>
+                      <Alert.Title>{localizedChartLabels[idx]}</Alert.Title>
                       <Alert.Description>
                         {gap > 0
-                          ? `Performing ${gap.toFixed(0)} points above peer average`
-                          : `${Math.abs(gap).toFixed(0)} points below peer average - consider improvement`}
+                          ? t('performingAbove', { points: gap.toFixed(0) })
+                          : t('belowConsider', { points: Math.abs(gap).toFixed(0) })}
                       </Alert.Description>
                     </Alert.Content>
                   </Alert.Root>
@@ -492,16 +509,20 @@ function ResultsContent() {
   );
 }
 
+function ResultsFallback() {
+  return (
+    <Container maxW="container.xl" py={8}>
+      <VStack gap={4}>
+        <Spinner size="xl" />
+        <Text>Loading...</Text>
+      </VStack>
+    </Container>
+  );
+}
+
 export default function ResultsPage() {
   return (
-    <Suspense fallback={
-      <Container maxW="container.xl" py={8}>
-        <VStack gap={4}>
-          <Spinner size="xl" />
-          <Text>Loading...</Text>
-        </VStack>
-      </Container>
-    }>
+    <Suspense fallback={<ResultsFallback />}>
       <ResultsContent />
     </Suspense>
   );

@@ -13,19 +13,16 @@ import {
   Icon
 } from '@chakra-ui/react';
 import { Config } from '@/lib/config';
+import { useLocale, getLocalizedStageNames, getLocalizedShortStageNames } from '@/lib/i18n';
 
 // Helper function to get compact stage names for completed stages
-const getCompactStageName = (stageName: string): string => {
-  const stageNumber = stageName.match(/Stage (\d+)/)?.[1];
-  const mapping: Record<string, string> = {
-    '1': 'Stage 1: e-Document ✓',
-    '2': 'Stage 2: e-Signature ✓',
-    '3': 'Stage 3: Workflow ✓',
-    '4': 'Stage 4: Authoring ✓',
-    '5': 'Stage 5: Intelligence ✓',
-    '6': 'Stage 6: Execution ✓'
-  };
-  return stageNumber ? mapping[stageNumber] || stageName.replace('CLM Stage ', 'Stage ') : stageName.replace('CLM Stage ', 'Stage ');
+const getCompactStageName = (stageName: string, locale: 'en' | 'es'): string => {
+  const stageNumber = stageName.match(/(?:Stage|Etapa) (\d+)/)?.[1] || stageName.match(/(\d+):/)?.[1];
+  const shortNames = getLocalizedShortStageNames(locale);
+  if (stageNumber && shortNames[stageNumber]) {
+    return shortNames[stageNumber] + ' ✓';
+  }
+  return stageName.replace('CLM Stage ', locale === 'es' ? 'Etapa ' : 'Stage ').replace('Etapa CLM ', 'Etapa ');
 };
 
 interface SidebarNavigationProps {
@@ -53,8 +50,11 @@ export default function SidebarNavigation({
   isOpen = true,
   onClose
 }: SidebarNavigationProps) {
-  // Get stage information from survey JSON
-  const stages = Object.entries(Config.STAGE_RADAR_NAMES);
+  const { locale, t } = useLocale();
+
+  // Get stage information with localized names
+  const localizedStageNames = getLocalizedStageNames(locale);
+  const stages = Object.entries(localizedStageNames);
 
   return (
     <Box
@@ -78,10 +78,10 @@ export default function SidebarNavigation({
           <HStack justify="space-between" align="center">
             <VStack align="start" gap={0}>
               <Text fontSize="lg" fontWeight="bold" color="agiloft.fg">
-                CLM Self-Assessment
+                {t('clmSelfAssessment')}
               </Text>
               <Text fontSize="sm" color="fg.muted">
-                Navigation & Progress
+                {t('navigationProgress')}
               </Text>
             </VStack>
             {/* Close button */}
@@ -100,7 +100,7 @@ export default function SidebarNavigation({
           <Card.Body p={4}>
             <VStack gap={2} align="stretch">
               <HStack justify="space-between">
-                <Text fontSize="sm" fontWeight="medium">Overall Progress</Text>
+                <Text fontSize="sm" fontWeight="medium">{t('overallProgress')}</Text>
                 <Badge colorPalette={overallProgress >= 100 ? 'green' : 'agiloft'}>
                   {overallProgress.toFixed(0)}%
                 </Badge>
@@ -119,7 +119,7 @@ export default function SidebarNavigation({
         {/* Stage Navigation */}
         <VStack gap={2} align="stretch">
           <Text fontSize="md" fontWeight="semibold" color="fg.emphasized">
-            Survey Stages
+            {t('surveyStages')}
           </Text>
 
           {stages.map(([key, stageName], index) => {
@@ -127,6 +127,9 @@ export default function SidebarNavigation({
             // Fix: currentPage is SurveyJS page index, need to account for intro and user_info pages
             const isActive = currentPage === index + 2; // +2 for intro and user_info pages
             const isCompleted = progress >= 100;
+            const displayName = locale === 'es'
+              ? stageName.replace('Etapa CLM ', 'Etapa ')
+              : stageName.replace('CLM Stage ', 'Stage ');
 
             return (
               <Button
@@ -149,8 +152,8 @@ export default function SidebarNavigation({
                       noOfLines={2}
                     >
                       {isCompleted
-                        ? getCompactStageName(stageName)
-                        : stageName.replace('CLM Stage ', 'Stage ')
+                        ? getCompactStageName(stageName, locale)
+                        : displayName
                       }
                     </Text>
                     <HStack gap={1}>
@@ -182,7 +185,7 @@ export default function SidebarNavigation({
         {/* Results Navigation */}
         <VStack gap={2} align="stretch">
           <Text fontSize="md" fontWeight="semibold" color="fg.emphasized">
-            Analysis
+            {t('analysis')}
           </Text>
 
           <Button
@@ -199,10 +202,10 @@ export default function SidebarNavigation({
           >
             <VStack spacing={0} align="flex-start">
               <Text fontSize="sm" fontWeight="medium">
-                View Results
+                {t('viewResults')}
               </Text>
               <Text fontSize="xs" color="fg.muted">
-                {overallProgress >= 80 ? 'Analysis Ready' : `${(100 - overallProgress).toFixed(0)}% remaining`}
+                {overallProgress >= 80 ? t('analysisReady') : `${(100 - overallProgress).toFixed(0)}% ${t('remaining')}`}
               </Text>
             </VStack>
           </Button>
@@ -215,7 +218,7 @@ export default function SidebarNavigation({
               <VStack gap={2} align="stretch">
                 <VStack gap={1} align="stretch">
                   <Text fontSize="xs" color="fg.muted">
-                    Session ID
+                    {t('sessionId')}
                   </Text>
                   <Text fontSize="xs" fontFamily="mono" color="fg">
                     {sessionId.split('-')[0]}...
@@ -224,7 +227,7 @@ export default function SidebarNavigation({
                 {userName && (
                   <VStack gap={1} align="stretch">
                     <Text fontSize="xs" color="fg.muted">
-                      Name
+                      {t('name')}
                     </Text>
                     <Text fontSize="xs" color="fg" wordBreak="break-word">
                       {userName}
@@ -234,7 +237,7 @@ export default function SidebarNavigation({
                 {userEmail && (
                   <VStack gap={1} align="stretch">
                     <Text fontSize="xs" color="fg.muted">
-                      Email
+                      {t('email')}
                     </Text>
                     <Text fontSize="xs" color="fg" wordBreak="break-word">
                       {userEmail}

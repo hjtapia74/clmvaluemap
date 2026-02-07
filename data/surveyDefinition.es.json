@@ -1,0 +1,1083 @@
+{
+  "title": "Autoevaluacion de Madurez CLM",
+  "description": "Evalue la madurez de la gestion del ciclo de vida de contratos de su organizacion",
+  "pages": [
+    {
+      "name": "introduction",
+      "title": "Bienvenido a la Encuesta de Autoevaluacion CLM",
+      "elements": [
+        {
+          "type": "html",
+          "name": "intro_html",
+          "title": "",
+          "isRequired": false,
+          "choices": [],
+          "description": "\n          <div style=\"padding: 20px; background: #f8f9fa; border-radius: 8px;\">\n            <h3>Evaluacion de Madurez de Gestion del Ciclo de Vida de Contratos (CLM)</h3>\n            <p>Esta evaluacion integral le ayudara a evaluar la madurez de la gestion de contratos de su organizacion a traves de seis etapas criticas:</p>\n            <ul>\n              <li><strong>Etapa 1: Documento Electronico</strong> - Capacidades de gestion de documentos digitales</li>\n              <li><strong>Etapa 2: Firma Electronica</strong> - Integracion de firma electronica</li>\n              <li><strong>Etapa 3: Automatizacion del Flujo de Trabajo de Contratos</strong> - Procesos y flujos de trabajo automatizados</li>\n              <li><strong>Etapa 4: Automatizacion de Redaccion de Contratos</strong> - Gestion de plantillas y clausulas</li>\n              <li><strong>Etapa 5: Inteligencia de Contratos</strong> - Analitica y perspectivas</li>\n              <li><strong>Etapa 6: Ejecucion de Contratos</strong> - Monitoreo de rendimiento e integracion</li>\n            </ul>\n            <p>Cada pregunta utiliza una escala de calificacion de 1-5 donde:</p>\n            <ul>\n              <li><strong>1</strong> = Sin capacidad o funcionalidad muy limitada</li>\n              <li><strong>2</strong> = Capacidad basica con limitaciones significativas</li>\n              <li><strong>3</strong> = Capacidad moderada con algo de automatizacion</li>\n              <li><strong>4</strong> = Buena capacidad con automatizacion confiable</li>\n              <li><strong>5</strong> = Capacidad avanzada con automatizacion integral</li>\n            </ul>\n            <p>Sus respuestas se guardaran automaticamente a medida que avance en la encuesta.</p>\n          </div>\n        "
+        }
+      ]
+    },
+    {
+      "name": "user_info",
+      "title": "Su Informacion",
+      "elements": [
+        {
+          "type": "text",
+          "name": "company_name",
+          "title": "Nombre de la Empresa",
+          "isRequired": true,
+          "choices": []
+        },
+        {
+          "type": "text",
+          "name": "email",
+          "title": "Correo Electronico",
+          "isRequired": true,
+          "choices": [],
+          "description": "Usaremos esto para guardar su progreso y enviarle los resultados"
+        },
+        {
+          "type": "text",
+          "name": "name",
+          "title": "Su Nombre (Opcional)",
+          "isRequired": false,
+          "choices": []
+        },
+        {
+          "type": "text",
+          "name": "role",
+          "title": "Su Cargo (Opcional)",
+          "isRequired": false,
+          "choices": []
+        }
+      ]
+    },
+    {
+      "name": "stage_1",
+      "title": "Etapa 1: Documento Electronico",
+      "elements": [
+        {
+          "type": "radiogroup",
+          "name": "stage1_centralized_contract_repository_1",
+          "title": "Que tan efectivamente mantiene su organizacion un repositorio centralizado donde todos los contratos sean accesibles para el personal autorizado, independientemente de la plataforma de almacenamiento?",
+          "isRequired": true,
+          "choices": [
+            {
+              "value": 1,
+              "text": "Sin repositorio centralizado; contratos almacenados en varios lugares sin organizacion sistematica"
+            },
+            {
+              "value": 2,
+              "text": "Existe una ubicacion de almacenamiento compartido basica pero con organizacion limitada y problemas de accesibilidad"
+            },
+            {
+              "value": 3,
+              "text": "Existe un repositorio centralizado con busqueda basica pero cobertura incompleta de contratos"
+            },
+            {
+              "value": 4,
+              "text": "Repositorio bien organizado con la mayoria de los contratos accesibles y buscables por usuarios autorizados"
+            },
+            {
+              "value": 5,
+              "text": "Repositorio integral con indexacion flexible, cobertura completa de contratos y controles de acceso basados en roles"
+            }
+          ],
+          "description": "Centralized contract repository"
+        },
+        {
+          "type": "radiogroup",
+          "name": "stage1_document_classification_and_tagging_2",
+          "title": "En que medida ha implementado metadatos definidos por el usuario que se alinean con los estandares de su organizacion para mejorar la recuperacion y el analisis de contratos?",
+          "isRequired": true,
+          "choices": [
+            {
+              "value": 1,
+              "text": "Sin sistema de etiquetado o clasificacion sistematico"
+            },
+            {
+              "value": 2,
+              "text": "Tipos de documentos basicos identificados pero metadatos limitados aplicados de forma inconsistente"
+            },
+            {
+              "value": 3,
+              "text": "Esquema de clasificacion estandarizado con consistencia moderada en la aplicacion"
+            },
+            {
+              "value": 4,
+              "text": "Marco integral de metadatos aplicado consistentemente a la mayoria de los contratos"
+            },
+            {
+              "value": 5,
+              "text": "Sistema robusto de metadatos definido por el usuario completamente alineado con los estandares organizacionales, permitiendo recuperacion y analisis avanzados"
+            }
+          ],
+          "description": "Document classification and tagging"
+        },
+        {
+          "type": "radiogroup",
+          "name": "stage1_audit_trails_and_document_history_3",
+          "title": "Que tan completos son sus registros de auditoria para rastrear todas las actividades relacionadas con contratos, y se pueden descargar facilmente para fines de cumplimiento?",
+          "isRequired": true,
+          "choices": [
+            {
+              "value": 1,
+              "text": "Sin capacidades de auditoria o seguimiento de cambios muy limitado"
+            },
+            {
+              "value": 2,
+              "text": "Historial de versiones basico sin atribucion de usuario o registros de actividad completos"
+            },
+            {
+              "value": 3,
+              "text": "Capacidades de auditoria moderadas capturando cambios importantes con informes limitados"
+            },
+            {
+              "value": 4,
+              "text": "Seguimiento de actividad integral con atribucion de usuario e informes estandar"
+            },
+            {
+              "value": 5,
+              "text": "Registros detallados completos y descargables para todas las actividades con informes personalizados para cumplimiento regulatorio"
+            }
+          ],
+          "description": "Audit trails and document history"
+        },
+        {
+          "type": "radiogroup",
+          "name": "stage1_bulk_contract_import_and_export_4",
+          "title": "Su sistema maneja efectivamente importaciones de contratos de gran volumen con analisis impulsado por IA y capacidades de extraccion de datos?",
+          "isRequired": true,
+          "choices": [
+            {
+              "value": 1,
+              "text": "Importacion de contratos solo manual; sin capacidades masivas"
+            },
+            {
+              "value": 2,
+              "text": "Carga masiva basica pero requiere procesamiento manual extenso despues"
+            },
+            {
+              "value": 3,
+              "text": "Importacion masiva con extraccion de datos semi-automatizada que requiere verificacion manual significativa"
+            },
+            {
+              "value": 4,
+              "text": "Importacion masiva eficiente con buena extraccion automatizada de datos y precision moderada"
+            },
+            {
+              "value": 5,
+              "text": "Importacion masiva impulsada por IA con analisis automatizado de alta calidad y extraccion de datos que requiere minima intervencion manual"
+            }
+          ],
+          "description": "Bulk contract import and export"
+        }
+      ]
+    },
+    {
+      "name": "stage_2",
+      "title": "Etapa 2: Firma Electronica",
+      "elements": [
+        {
+          "type": "radiogroup",
+          "name": "stage2_e_signature_capability_or_integration_1",
+          "title": "Que tan fluida es la integracion de su sistema con proveedores de firma electronica para facilitar el cierre y la negociacion de contratos?",
+          "isRequired": true,
+          "choices": [
+            {
+              "value": 1,
+              "text": "Sin capacidades de firma electronica; solo firmas en papel"
+            },
+            {
+              "value": 2,
+              "text": "Capacidades basicas de firma electronica pero desconectadas del sistema de gestion de contratos"
+            },
+            {
+              "value": 3,
+              "text": "Integracion funcional con un proveedor de firma electronica con sincronizacion manual de datos"
+            },
+            {
+              "value": 4,
+              "text": "Buena integracion con los principales proveedores de firma electronica con actualizaciones de estado automatizadas"
+            },
+            {
+              "value": 5,
+              "text": "Integracion fluida con multiples proveedores de firma electronica, soportando flujos de firma complejos y visibilidad completa"
+            }
+          ],
+          "description": "e-Signature capability or integration"
+        }
+      ]
+    },
+    {
+      "name": "stage_3",
+      "title": "Etapa 3: Automatizacion del Flujo de Trabajo de Contratos",
+      "elements": [
+        {
+          "type": "radiogroup",
+          "name": "stage3_customizable_approvals_workflows_1",
+          "title": "Que tan efectivamente puede su equipo configurar flujos de trabajo de aprobacion sin codigo que se alineen con las necesidades unicas de su organizacion, incluyendo seguimiento, informes y notificaciones?",
+          "isRequired": true,
+          "choices": [
+            {
+              "value": 1,
+              "text": "Sin flujos de trabajo de aprobacion estandarizados; aprobaciones ad-hoc basadas en correo electronico"
+            },
+            {
+              "value": 2,
+              "text": "Flujos de trabajo predefinidos basicos con personalizacion limitada"
+            },
+            {
+              "value": 3,
+              "text": "Flujos de trabajo moderadamente personalizables que requieren asistencia tecnica"
+            },
+            {
+              "value": 4,
+              "text": "Buena configuracion de flujos de trabajo sin codigo con asignaciones basadas en roles y notificaciones"
+            },
+            {
+              "value": 5,
+              "text": "Capacidad de flujo de trabajo sin codigo altamente flexible con seguimiento integral, informes y alertas multicanal"
+            }
+          ],
+          "description": "Customizable approvals workflows"
+        },
+        {
+          "type": "radiogroup",
+          "name": "stage3_renewals_management_2",
+          "title": "En que medida su sistema automatiza los flujos de trabajo de renovacion, monitorea las necesidades de renegociacion y alerta a los equipos para evitar plazos perdidos?",
+          "isRequired": true,
+          "choices": [
+            {
+              "value": 1,
+              "text": "Sin seguimiento de renovaciones; proceso completamente manual"
+            },
+            {
+              "value": 2,
+              "text": "Recordatorios basicos de calendario sin integracion de flujo de trabajo"
+            },
+            {
+              "value": 3,
+              "text": "Seguimiento sistematico de fechas de renovacion con inicio manual del flujo de trabajo"
+            },
+            {
+              "value": 4,
+              "text": "Alertas de renovacion automatizadas con inicio semi-automatizado del flujo de trabajo"
+            },
+            {
+              "value": 5,
+              "text": "Flujos de trabajo de renovacion completamente automatizados y configurables por el usuario con monitoreo anticipado, alertas oportunas e inicio automatizado de renegociacion"
+            }
+          ],
+          "description": "Renewals management"
+        },
+        {
+          "type": "radiogroup",
+          "name": "stage3_contract_review_and_negotiation_3",
+          "title": "Que tan bien soporta su sistema la revision y negociacion multiparticipante a traves de diferentes mecanismos de almacenamiento mientras mantiene comunicaciones internas confidenciales?",
+          "isRequired": true,
+          "choices": [
+            {
+              "value": 1,
+              "text": "Revision y negociacion basadas en correo electronico sin soporte del sistema"
+            },
+            {
+              "value": 2,
+              "text": "Capacidades basicas de compartir documentos pero funciones de colaboracion limitadas"
+            },
+            {
+              "value": 3,
+              "text": "Herramientas de colaboracion moderadas con algo de control de versiones pero controles de confidencialidad limitados"
+            },
+            {
+              "value": 4,
+              "text": "Buena revision colaborativa con control de versiones y comentarios internos basicos"
+            },
+            {
+              "value": 5,
+              "text": "Revision multiparticipante integral a traves de plataformas de almacenamiento con mensajeria confidencial robusta y seguimiento de negociacion"
+            }
+          ],
+          "description": "Contract review and negotiation"
+        },
+        {
+          "type": "radiogroup",
+          "name": "stage3_third_party_contract_management_4",
+          "title": "Que tan fluido puede su sistema incorporar, analizar y gestionar contratos de terceros, incluyendo evaluacion de riesgos y analisis de clausulas?",
+          "isRequired": true,
+          "choices": [
+            {
+              "value": 1,
+              "text": "Sin capacidades especificas para contratos de terceros; gestionados igual que los contratos internos"
+            },
+            {
+              "value": 2,
+              "text": "Almacenamiento basico de contratos de terceros con analisis minimo"
+            },
+            {
+              "value": 3,
+              "text": "Proceso de recepcion estandarizado con analisis manual y evaluacion de riesgos"
+            },
+            {
+              "value": 4,
+              "text": "Buena recepcion automatizada con analisis basico asistido por IA"
+            },
+            {
+              "value": 5,
+              "text": "Incorporacion fluida mejorada por IA con analisis integral de riesgos, cumplimiento y clausulas"
+            }
+          ],
+          "description": "Third-party contract management"
+        },
+        {
+          "type": "radiogroup",
+          "name": "stage3_risk_scoring_and_compliance_management_5",
+          "title": "En que medida su sistema proporciona puntuacion de riesgos y monitoreo de cumplimiento para identificar problemas potenciales y asegurar el cumplimiento regulatorio?",
+          "isRequired": true,
+          "choices": [
+            {
+              "value": 1,
+              "text": "Sin evaluacion sistematica de riesgos ni monitoreo de cumplimiento"
+            },
+            {
+              "value": 2,
+              "text": "Evaluacion manual basica de riesgos sin metodologia consistente ni verificaciones sistematicas de cumplimiento"
+            },
+            {
+              "value": 3,
+              "text": "Metodologia estandarizada de evaluacion de riesgos y cumplimiento pero aplicada manualmente con seguimiento limitado"
+            },
+            {
+              "value": 4,
+              "text": "Puntuacion de riesgos automatizada y verificaciones de cumplimiento basadas en reglas predefinidas con monitoreo regular"
+            },
+            {
+              "value": 5,
+              "text": "Modelado avanzado de riesgos con algoritmos de puntuacion configurables, verificacion automatizada de cumplimiento y monitoreo regulatorio proactivo"
+            }
+          ],
+          "description": "Risk scoring and compliance management"
+        },
+        {
+          "type": "radiogroup",
+          "name": "stage3_template_and_clause_standardization_6",
+          "title": "Que tan efectivamente implementa su sistema plantillas estandarizadas y estandarizacion de clausulas para limitar los riesgos de inconsistencia y asegurar uniformidad entre contratos?",
+          "isRequired": true,
+          "choices": [
+            {
+              "value": 1,
+              "text": "Sin plantillas ni clausulas estandarizadas; cada contrato creado de forma unica"
+            },
+            {
+              "value": 2,
+              "text": "Existen plantillas basicas pero con minima aplicacion y modificaciones personalizadas frecuentes"
+            },
+            {
+              "value": 3,
+              "text": "Plantillas estandar con control moderado de clausulas pero uso inconsistente entre departamentos"
+            },
+            {
+              "value": 4,
+              "text": "Biblioteca bien definida de plantillas y clausulas con buena adopcion y consistencia en la mayoria de los tipos de contrato"
+            },
+            {
+              "value": 5,
+              "text": "Estandarizacion integral de plantillas y clausulas con aplicacion automatizada, control de versiones y adopcion organizacional completa"
+            }
+          ],
+          "description": "Template and clause standardization"
+        }
+      ]
+    },
+    {
+      "name": "stage_4",
+      "title": "Etapa 4: Automatizacion de Redaccion de Contratos",
+      "elements": [
+        {
+          "type": "radiogroup",
+          "name": "stage4_redlining_and_collaboration_1",
+          "title": "En que medida ofrece su sistema capacidades de marcado mejoradas por IA que aceleran las negociaciones mientras mantienen controles de acceso apropiados?",
+          "isRequired": true,
+          "choices": [
+            {
+              "value": 1,
+              "text": "Sin capacidades de marcado del sistema; usando herramientas externas de procesamiento de texto"
+            },
+            {
+              "value": 2,
+              "text": "Comparacion basica de documentos sin asistencia inteligente"
+            },
+            {
+              "value": 3,
+              "text": "Capacidades de marcado estandar con seguimiento de versiones pero minima mejora por IA"
+            },
+            {
+              "value": 4,
+              "text": "Buen marcado asistido por IA con sugerencias de clausulas y control de versiones"
+            },
+            {
+              "value": 5,
+              "text": "Marcado avanzado mejorado por IA con alternativas inteligentes, aceleracion de negociacion y controles de acceso sofisticados"
+            }
+          ],
+          "description": "Redlining and collaboration"
+        },
+        {
+          "type": "radiogroup",
+          "name": "stage4_automated_contract_creation_2",
+          "title": "Que tan bien soporta su sistema solicitudes de contratos amigables para el usuario con creacion automatica basada en plantillas dinamicas, configurables y enriquecidas por IA?",
+          "isRequired": true,
+          "choices": [
+            {
+              "value": 1,
+              "text": "Redaccion manual de contratos sin automatizacion"
+            },
+            {
+              "value": 2,
+              "text": "Plantillas basicas que requieren ajuste manual significativo"
+            },
+            {
+              "value": 3,
+              "text": "Plantillas estandar con contenido dinamico limitado"
+            },
+            {
+              "value": 4,
+              "text": "Buen sistema de plantillas con clausulas condicionales y automatizacion basica"
+            },
+            {
+              "value": 5,
+              "text": "Creacion de contratos completamente automatizada con interfaces amigables para el usuario, plantillas dinamicas enriquecidas por IA y capacidades de configuracion sin codigo"
+            }
+          ],
+          "description": "Automated contract creation"
+        },
+        {
+          "type": "radiogroup",
+          "name": "stage4_contract_clause_library_3",
+          "title": "En que grado ha implementado una biblioteca de clausulas estandar y de respaldo mejorada por IA que puede mantenerse y configurarse facilmente?",
+          "isRequired": true,
+          "choices": [
+            {
+              "value": 1,
+              "text": "Sin biblioteca formal de clausulas; clausulas copiadas de contratos existentes"
+            },
+            {
+              "value": 2,
+              "text": "Coleccion basica de clausulas estandar sin organizacion sistematica"
+            },
+            {
+              "value": 3,
+              "text": "Biblioteca de clausulas organizada con seleccion e implementacion manual"
+            },
+            {
+              "value": 4,
+              "text": "Buena gestion de clausulas con categorizacion y asistencia moderada de IA"
+            },
+            {
+              "value": 5,
+              "text": "Biblioteca integral de clausulas mejorada por IA con sugerencias automatizadas, opciones de respaldo y facil mantenimiento"
+            }
+          ],
+          "description": "Contract clause library"
+        },
+        {
+          "type": "radiogroup",
+          "name": "stage4_contract_templates_4",
+          "title": "Que tan efectivamente crea y configura su organizacion plantillas con logica multivariable para incluir o excluir clausulas estandar y de respaldo?",
+          "isRequired": true,
+          "choices": [
+            {
+              "value": 1,
+              "text": "Sin plantillas estandarizadas; contratos creados desde cero o ejemplos anteriores"
+            },
+            {
+              "value": 2,
+              "text": "Plantillas estaticas basicas con logica minima"
+            },
+            {
+              "value": 3,
+              "text": "Plantillas estandar con algunos campos variables pero logica condicional limitada"
+            },
+            {
+              "value": 4,
+              "text": "Buen sistema de plantillas con capacidades moderadas de logica condicional"
+            },
+            {
+              "value": 5,
+              "text": "Plantillas sofisticadas configurables por el usuario con logica multivariable para inclusion/exclusion dinamica de clausulas y opciones de respaldo"
+            }
+          ],
+          "description": "Contract templates"
+        },
+        {
+          "type": "radiogroup",
+          "name": "stage4_contract_authoring_5",
+          "title": "Que tan integralmente soporta su sistema la utilizacion de plantillas dinamicas mejoradas por IA y flujos de trabajo configurables sin codigo para la creacion de nuevos contratos?",
+          "isRequired": true,
+          "choices": [
+            {
+              "value": 1,
+              "text": "Redaccion manual con soporte limitado del sistema"
+            },
+            {
+              "value": 2,
+              "text": "Herramientas basicas de creacion de documentos con inteligencia minima"
+            },
+            {
+              "value": 3,
+              "text": "Redaccion basada en plantillas con algo de soporte de flujo de trabajo pero asistencia limitada de IA"
+            },
+            {
+              "value": 4,
+              "text": "Buena redaccion soportada por IA con flujos de trabajo estandar"
+            },
+            {
+              "value": 5,
+              "text": "Redaccion dinamica integral mejorada por IA con flujos de trabajo completamente configurables sin codigo asegurando consistencia y velocidad"
+            }
+          ],
+          "description": "Contract authoring"
+        },
+        {
+          "type": "radiogroup",
+          "name": "stage4_contract_obligations_analysis_6",
+          "title": "Que tan integralmente analiza su sistema las obligaciones en todos los contratos para permitir planificacion de escenarios sofisticada?",
+          "isRequired": true,
+          "choices": [
+            {
+              "value": 1,
+              "text": "Sin analisis sistematico de obligaciones"
+            },
+            {
+              "value": 2,
+              "text": "Seguimiento manual basico de obligaciones clave"
+            },
+            {
+              "value": 3,
+              "text": "Identificacion estandarizada de obligaciones con analisis limitado entre contratos"
+            },
+            {
+              "value": 4,
+              "text": "Buena extraccion automatizada de obligaciones con analisis basico de escenarios"
+            },
+            {
+              "value": 5,
+              "text": "Analisis integral de obligaciones mejorado por IA en todo el portafolio de contratos permitiendo planificacion sofisticada de escenarios"
+            }
+          ],
+          "description": "Contract obligations analysis"
+        },
+        {
+          "type": "radiogroup",
+          "name": "stage4_contract_entitlements_analysis_7",
+          "title": "En que medida proporciona su sistema analisis y comparacion de derechos mejorados por IA en todo su portafolio de contratos?",
+          "isRequired": true,
+          "choices": [
+            {
+              "value": 1,
+              "text": "Sin analisis sistematico de derechos"
+            },
+            {
+              "value": 2,
+              "text": "Identificacion manual de derechos basicos"
+            },
+            {
+              "value": 3,
+              "text": "Extraccion estandarizada de derechos con comparacion limitada entre contratos"
+            },
+            {
+              "value": 4,
+              "text": "Buena identificacion automatizada de derechos con capacidades basicas de comparacion"
+            },
+            {
+              "value": 5,
+              "text": "Analisis y comparacion avanzados de derechos mejorados por IA en todo el portafolio de contratos"
+            }
+          ],
+          "description": "Contract entitlements analysis"
+        },
+        {
+          "type": "radiogroup",
+          "name": "stage4_self_service_contracting_8",
+          "title": "Que tan efectivamente proporciona su sistema interfaces simples para usuarios no legales para solicitar, monitorear y acceder a contratos y negociaciones?",
+          "isRequired": true,
+          "choices": [
+            {
+              "value": 1,
+              "text": "Sin capacidades de autoservicio; todas las solicitudes a traves del departamento legal"
+            },
+            {
+              "value": 2,
+              "text": "Formularios de solicitud basicos pero visibilidad limitada del estado"
+            },
+            {
+              "value": 3,
+              "text": "Proceso de solicitud estandarizado con actualizaciones de estado pero acceso limitado a documentos"
+            },
+            {
+              "value": 4,
+              "text": "Buen portal de autoservicio con seguimiento de solicitudes y acceso a documentos"
+            },
+            {
+              "value": 5,
+              "text": "Interfaces de autoservicio integrales que permiten a usuarios no legales solicitar facilmente, monitorear estado y acceder a documentos de contrato apropiados"
+            }
+          ],
+          "description": "Self-service contracting"
+        },
+        {
+          "type": "radiogroup",
+          "name": "stage4_versioning_and_change_management_9",
+          "title": "Que tan sistematicamente rastrea, almacena y gestiona su organizacion las revisiones y actualizaciones de contratos a lo largo de su ciclo de vida?",
+          "isRequired": true,
+          "choices": [
+            {
+              "value": 1,
+              "text": "Sin versionado formal; dificil determinar la version actual"
+            },
+            {
+              "value": 2,
+              "text": "Control de versiones manual basico con seguimiento historico limitado"
+            },
+            {
+              "value": 3,
+              "text": "Seguimiento sistematico de versiones pero con procesos manuales para actualizaciones"
+            },
+            {
+              "value": 4,
+              "text": "Control de versiones automatizado con historial claro y seguimiento de cambios"
+            },
+            {
+              "value": 5,
+              "text": "Gestion integral de versiones con seguimiento automatico, capacidades de comparacion y documentacion completa del ciclo de vida"
+            }
+          ],
+          "description": "Versioning and change management"
+        }
+      ]
+    },
+    {
+      "name": "stage_5",
+      "title": "Etapa 5: Inteligencia de Contratos",
+      "elements": [
+        {
+          "type": "radiogroup",
+          "name": "stage5_contract_reporting_analytics_1",
+          "title": "Que tan efectivamente proporciona su sistema informes configurables y tableros para mostrar datos, tendencias y oportunidades de mejora de procesos?",
+          "isRequired": true,
+          "choices": [
+            {
+              "value": 1,
+              "text": "Sin capacidades de informes sistematicos"
+            },
+            {
+              "value": 2,
+              "text": "Informes predefinidos basicos con personalizacion minima"
+            },
+            {
+              "value": 3,
+              "text": "Informes estandar con algunas opciones de configuracion"
+            },
+            {
+              "value": 4,
+              "text": "Buenas herramientas de informes con tableros configurables por el usuario"
+            },
+            {
+              "value": 5,
+              "text": "Informes y analitica integrales configurables sin codigo con tableros sofisticados destacando tendencias de datos y oportunidades de mejora"
+            }
+          ],
+          "description": "Contract reporting & analytics"
+        },
+        {
+          "type": "radiogroup",
+          "name": "stage5_contract_risk_scoring_2",
+          "title": "En que grado ha implementado puntuacion de riesgos mejorada por IA y configurable basada tanto en estandares de la industria como en requisitos internos?",
+          "isRequired": true,
+          "choices": [
+            {
+              "value": 1,
+              "text": "Sin capacidades de puntuacion de riesgos"
+            },
+            {
+              "value": 2,
+              "text": "Evaluacion manual basica de riesgos sin metodologia consistente"
+            },
+            {
+              "value": 3,
+              "text": "Metodologia estandarizada de evaluacion de riesgos pero aplicada manualmente"
+            },
+            {
+              "value": 4,
+              "text": "Puntuacion de riesgos automatizada basada en reglas predefinidas con configurabilidad limitada"
+            },
+            {
+              "value": 5,
+              "text": "Puntuacion de riesgos mejorada por IA completamente configurable, incorporando tanto estandares de la industria como requisitos internos"
+            }
+          ],
+          "description": "Contract risk scoring"
+        },
+        {
+          "type": "radiogroup",
+          "name": "stage5_contract_digitization_3",
+          "title": "Que tan efectivamente automatiza su sistema la ingestion y digitalizacion de contratos con analisis, revision y extraccion de datos mejorados por IA?",
+          "isRequired": true,
+          "choices": [
+            {
+              "value": 1,
+              "text": "Entrada manual de datos desde contratos en papel"
+            },
+            {
+              "value": 2,
+              "text": "Escaneo basico de documentos con extraccion minima de datos"
+            },
+            {
+              "value": 3,
+              "text": "Proceso de digitalizacion estandarizado con extraccion de datos semi-automatizada"
+            },
+            {
+              "value": 4,
+              "text": "Buena ingestion automatizada con extraccion confiable de datos"
+            },
+            {
+              "value": 5,
+              "text": "Digitalizacion avanzada mejorada por IA con analisis de datos de alta calidad, revision integral y extraccion precisa"
+            }
+          ],
+          "description": "Contract digitization"
+        },
+        {
+          "type": "radiogroup",
+          "name": "stage5_automated_contract_review_4",
+          "title": "Que tan efectivamente usa su sistema IA para identificar y extraer datos clave, realizar revisiones iniciales de riesgo y cumplimiento, y sugerir alternativas de lenguaje estandarizado?",
+          "isRequired": true,
+          "choices": [
+            {
+              "value": 1,
+              "text": "Revision de contratos completamente manual"
+            },
+            {
+              "value": 2,
+              "text": "Revision basada en lista de verificacion basica sin asistencia de IA"
+            },
+            {
+              "value": 3,
+              "text": "Revision semi-automatizada con extraccion limitada de datos"
+            },
+            {
+              "value": 4,
+              "text": "Buena revision asistida por IA con extraccion confiable de datos e identificacion basica de riesgos"
+            },
+            {
+              "value": 5,
+              "text": "Revision integral de contratos enriquecida por IA con extraccion avanzada de datos, evaluacion exhaustiva de riesgo y cumplimiento, y sugerencias inteligentes de lenguaje"
+            }
+          ],
+          "description": "Automated contract review"
+        },
+        {
+          "type": "radiogroup",
+          "name": "stage5_advanced_search_filtering_5",
+          "title": "Que tan integrales son las capacidades de busqueda de su sistema para satisfacer diferentes necesidades de usuarios y exponer datos de contratos al personal autorizado?",
+          "isRequired": true,
+          "choices": [
+            {
+              "value": 1,
+              "text": "Solo busqueda basica por nombre de archivo"
+            },
+            {
+              "value": 2,
+              "text": "Busqueda de texto completo con opciones de filtrado limitadas"
+            },
+            {
+              "value": 3,
+              "text": "Busqueda estandar con filtrado moderado por metadatos comunes"
+            },
+            {
+              "value": 4,
+              "text": "Busqueda avanzada con buenas opciones de filtrado y capacidades de busqueda guardada"
+            },
+            {
+              "value": 5,
+              "text": "Capacidades de busqueda integrales con multiples opciones, filtrado avanzado y experiencias de busqueda personalizadas para diferentes necesidades de usuarios"
+            }
+          ],
+          "description": "Advanced search & filtering"
+        },
+        {
+          "type": "radiogroup",
+          "name": "stage5_spend_cost_analysis_6",
+          "title": "Que tan efectivamente esta integrado su sistema de contratos con sistemas financieros para analizar la efectividad del gasto?",
+          "isRequired": true,
+          "choices": [
+            {
+              "value": 1,
+              "text": "Sin integracion entre sistemas de contratos y financieros"
+            },
+            {
+              "value": 2,
+              "text": "Exportacion/importacion manual entre sistemas con analisis limitado"
+            },
+            {
+              "value": 3,
+              "text": "Integracion basica con informes financieros estandar"
+            },
+            {
+              "value": 4,
+              "text": "Buena integracion con capacidades moderadas de analisis de gastos"
+            },
+            {
+              "value": 5,
+              "text": "Integracion fluida con capacidades integrales de analisis de gastos y costos"
+            }
+          ],
+          "description": "Spend & cost analysis"
+        },
+        {
+          "type": "radiogroup",
+          "name": "stage5_obligations_management_7",
+          "title": "Que tan bien rastrea, identifica y alerta automaticamente su sistema a los usuarios sobre obligaciones clave, incluyendo actualizaciones de estado y flujos de trabajo activados por hitos?",
+          "isRequired": true,
+          "choices": [
+            {
+              "value": 1,
+              "text": "Sin seguimiento sistematico de obligaciones"
+            },
+            {
+              "value": 2,
+              "text": "Lista manual de obligaciones clave sin soporte del sistema"
+            },
+            {
+              "value": 3,
+              "text": "Seguimiento basico de obligaciones con automatizacion limitada"
+            },
+            {
+              "value": 4,
+              "text": "Buena identificacion automatizada de obligaciones con seguimiento de estado"
+            },
+            {
+              "value": 5,
+              "text": "Seguimiento automatizado integral con reglas de notificacion sofisticadas y disparadores de flujo de trabajo para todas las obligaciones e hitos clave"
+            }
+          ],
+          "description": "Obligations management"
+        }
+      ]
+    },
+    {
+      "name": "stage_6",
+      "title": "Etapa 6: Ejecucion de Contratos",
+      "elements": [
+        {
+          "type": "radiogroup",
+          "name": "stage6_integration_with_enterprise_systems_1",
+          "title": "Que tan extensamente se conecta su sistema CLM con otros sistemas empresariales a traves de APIs, conectores o plataformas de integracion integradas?",
+          "isRequired": true,
+          "choices": [
+            {
+              "value": 1,
+              "text": "Sin integracion con otros sistemas empresariales"
+            },
+            {
+              "value": 2,
+              "text": "Intercambio manual basico de datos con sistemas limitados"
+            },
+            {
+              "value": 3,
+              "text": "Integracion moderada con sistemas clave usando conectores basicos"
+            },
+            {
+              "value": 4,
+              "text": "Buena integracion basada en API con la mayoria de los sistemas empresariales"
+            },
+            {
+              "value": 5,
+              "text": "Ecosistema integral de integracion con APIs, conectores preconstruidos y opciones iPaaS conectando a todos los sistemas adyacentes clave"
+            }
+          ],
+          "description": "Integration with enterprise systems"
+        },
+        {
+          "type": "radiogroup",
+          "name": "stage6_data_1st_capability_2",
+          "title": "En que grado trata su sistema los datos dentro de los contratos como la unidad primaria de informacion en lugar del documento mismo?",
+          "isRequired": true,
+          "choices": [
+            {
+              "value": 1,
+              "text": "Enfoque centrado en documentos con datos estructurados minimos"
+            },
+            {
+              "value": 2,
+              "text": "Metadatos basicos pero principalmente enfocado en documentos"
+            },
+            {
+              "value": 3,
+              "text": "Extraccion moderada de datos estructurados con almacenamiento orientado a documentos"
+            },
+            {
+              "value": 4,
+              "text": "Buena extraccion de datos con accesibilidad tanto de documentos como de datos"
+            },
+            {
+              "value": 5,
+              "text": "Arquitectura verdadera de datos primero donde los datos del contrato son la unidad principal de informacion con jerarquia y relaciones de datos robustas"
+            }
+          ],
+          "description": "Data-1st capability"
+        },
+        {
+          "type": "radiogroup",
+          "name": "stage6_milestone_tracking_3",
+          "title": "Que tan integralmente monitorea su sistema eventos clave del contrato y dispara automaticamente flujos de trabajo o notificaciones apropiadas?",
+          "isRequired": true,
+          "choices": [
+            {
+              "value": 1,
+              "text": "Sin seguimiento sistematico de hitos"
+            },
+            {
+              "value": 2,
+              "text": "Seguimiento basico de fechas que requiere monitoreo manual"
+            },
+            {
+              "value": 3,
+              "text": "Recordatorios automatizados para fechas clave sin integracion de flujo de trabajo"
+            },
+            {
+              "value": 4,
+              "text": "Buen monitoreo de hitos con disparadores basicos de flujo de trabajo"
+            },
+            {
+              "value": 5,
+              "text": "Monitoreo automatizado integral con reglas de notificacion sofisticadas e inicio de flujo de trabajo para todos los eventos clave"
+            }
+          ],
+          "description": "Milestone tracking"
+        },
+        {
+          "type": "radiogroup",
+          "name": "stage6_obligation_tracking_4",
+          "title": "En que medida identifica y expone automaticamente su sistema las obligaciones clave de todas las contrapartes de los contratos?",
+          "isRequired": true,
+          "choices": [
+            {
+              "value": 1,
+              "text": "Sin seguimiento sistematico de obligaciones de contrapartes"
+            },
+            {
+              "value": 2,
+              "text": "Identificacion manual de compromisos principales de contrapartes"
+            },
+            {
+              "value": 3,
+              "text": "Seguimiento basico de obligaciones clave de contrapartes con automatizacion limitada"
+            },
+            {
+              "value": 4,
+              "text": "Buena identificacion automatizada de la mayoria de las obligaciones de contrapartes"
+            },
+            {
+              "value": 5,
+              "text": "Identificacion y seguimiento automatizado integral de todas las obligaciones de contrapartes en todo el portafolio de contratos"
+            }
+          ],
+          "description": "Obligation tracking"
+        },
+        {
+          "type": "radiogroup",
+          "name": "stage6_contract_hierarchy_and_relationship_mapping_5",
+          "title": "Que tan efectivamente presenta su sistema contratos relacionados para asegurar que los usuarios tengan una vista completa de dependencias y relaciones?",
+          "isRequired": true,
+          "choices": [
+            {
+              "value": 1,
+              "text": "Sin seguimiento de relaciones entre contratos"
+            },
+            {
+              "value": 2,
+              "text": "Anotacion manual de relaciones basicas"
+            },
+            {
+              "value": 3,
+              "text": "Tipos de relaciones estandar con asociacion manual"
+            },
+            {
+              "value": 4,
+              "text": "Buena identificacion automatizada de relaciones con visualizacion basica"
+            },
+            {
+              "value": 5,
+              "text": "Mapeo integral de jerarquia y relaciones con visualizacion amigable de todas las dependencias"
+            }
+          ],
+          "description": "Contract hierarchy and relationship mapping"
+        },
+        {
+          "type": "radiogroup",
+          "name": "stage6_legal_entity_management_6",
+          "title": "Que tan bien soporta su sistema la creacion y seguimiento de entidades configurables para permitir la agregacion de contratos a nivel de entidad?",
+          "isRequired": true,
+          "choices": [
+            {
+              "value": 1,
+              "text": "Sin capacidades de gestion de entidades"
+            },
+            {
+              "value": 2,
+              "text": "Lista basica de entidades sin asociacion sistematica a contratos"
+            },
+            {
+              "value": 3,
+              "text": "Registros de entidades estandar con asociacion manual de contratos"
+            },
+            {
+              "value": 4,
+              "text": "Buena gestion de entidades con vinculacion confiable de contratos"
+            },
+            {
+              "value": 5,
+              "text": "Gestion integral de entidades configurable por el usuario permitiendo agregacion y analisis sofisticados a nivel de entidad"
+            }
+          ],
+          "description": "Legal entity management"
+        },
+        {
+          "type": "radiogroup",
+          "name": "stage6_esg_compliance_7",
+          "title": "Que tan bien soporta su sistema el monitoreo y reporte de directrices internas o regulaciones externas relacionadas con objetivos Ambientales, Sociales y de Gobernanza (ESG)?",
+          "isRequired": true,
+          "choices": [
+            {
+              "value": 1,
+              "text": "Sin capacidades especificas de ESG"
+            },
+            {
+              "value": 2,
+              "text": "Seguimiento manual de compromisos basicos de ESG sin enfoque sistematico"
+            },
+            {
+              "value": 3,
+              "text": "Clausulas de ESG estandarizadas pero monitoreo o reporte limitado"
+            },
+            {
+              "value": 4,
+              "text": "Buena biblioteca de clausulas ESG con capacidades basicas de monitoreo e informes"
+            },
+            {
+              "value": 5,
+              "text": "Monitoreo integral y configurable de cumplimiento ESG con implementacion automatizada de clausulas e informes sofisticados"
+            }
+          ],
+          "description": "ESG compliance"
+        }
+      ]
+    }
+  ],
+  "showProgressBar": "both",
+  "progressBarType": "pages",
+  "showQuestionNumbers": "on",
+  "questionsOnPageMode": "standard",
+  "showCompletedPage": false,
+  "completedHtml": ""
+}

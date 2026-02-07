@@ -233,6 +233,7 @@ npm run start
 - ✅ Progress tracking and auto-save
 - ✅ Results visualization with benchmarks
 - ✅ Sidebar navigation between stages
+- ✅ Multi-language support (English/Spanish)
 
 ## Future Enhancements (Documented)
 
@@ -242,11 +243,14 @@ npm run start
 - ~~Export bulk data~~
 - User management (future: multiple admin users)
 
+### ~~Multi-language Support~~ ✅ COMPLETED (2026-02-05)
+- ~~English/Spanish language toggle~~
+- ~~Translated survey questions and UI strings~~
+
 ### Additional Features
 - Email notifications for incomplete surveys
 - Conditional logic between stages
 - Custom question types
-- Multi-language support
 - API endpoints for external integration
 
 ## Chakra UI v3 Usage
@@ -416,3 +420,45 @@ Admin pages use consistent padding:
 1. **Surveys showing "In Progress" when completed**: Fixed by calculating completion from `stage_progress` table instead of relying on `survey_sessions.is_completed` field
 2. **Missing "Best in Class" on admin radar chart**: Added third trace to match public results page
 3. **bcrypt hash not working in .env.local**: Must escape `$` characters with `\$` in environment files
+
+### Multi-language Support (2026-02-05)
+Added English/Spanish language toggle for the entire CLM Self-Assessment application.
+
+#### Architecture
+- **Locale System**: React Context-based (`lib/i18n/LocaleContext.tsx`)
+- **Languages**: English (en), Spanish (es)
+- **Persistence**: localStorage with key `clm-survey-locale`
+- **Survey Translation**: Dual survey definition files
+- **UI Strings**: Translation files in `lib/i18n/translations/`
+
+#### Key Files
+| File | Purpose |
+|------|---------|
+| `/lib/i18n/index.ts` | Main i18n exports |
+| `/lib/i18n/LocaleContext.tsx` | Provider, useLocale hook, stage name helpers |
+| `/lib/i18n/translations/en.ts` | English UI strings (~80 keys) |
+| `/lib/i18n/translations/es.ts` | Spanish UI strings |
+| `/data/surveyDefinition.es.json` | Spanish survey (38 questions, 190 choices) |
+| `/components/LanguageToggle.tsx` | EN/ES toggle component |
+
+#### Modified Files
+- `/app/providers.tsx` - Wrapped app with LocaleProvider
+- `/components/Survey.tsx` - Locale-aware survey loading, language toggle, translated UI
+- `/components/SidebarNavigation.tsx` - Translated navigation strings
+- `/app/results/page.tsx` - Translated chart labels, table headers, insights
+
+#### Usage Pattern
+```typescript
+import { useLocale, getLocalizedStageNames } from '@/lib/i18n';
+
+const { locale, t } = useLocale();
+t('keyName')                    // Simple lookup
+t('keyName', { param: value })  // With interpolation
+```
+
+#### Important Notes
+1. **Database Compatibility**: Responses are stored using English capability descriptions (from `surveyDefinition.json`) regardless of display locale
+2. **Survey Rebuild**: Survey model recreates when locale changes; existing data preserved via sessionId recovery
+3. **SurveyJS Locale**: Uses `import 'survey-core/i18n/spanish'` for built-in SurveyJS UI elements (Next/Previous buttons, etc.)
+4. **Hydration Safety**: LocaleProvider returns null until mounted to prevent SSR mismatch
+5. **Admin Panel**: Remains in English only (not translated)
