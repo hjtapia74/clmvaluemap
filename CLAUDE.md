@@ -304,7 +304,7 @@ Semantic color tokens for dark mode:
 ### Deployment Process
 Application is deployed on AWS EC2 (Amazon Linux):
 - Instance ID: `i-0abb7acc30beb3e77`
-- Public IP: `34.201.151.219`
+- Public IP: `34.226.212.158`
 - Deployment script: `./deploy/update-app-amazon-linux.sh`
 - Managed with PM2 process manager
 - Automated deployment updates:
@@ -324,15 +324,15 @@ aws ec2-instance-connect send-ssh-public-key \
   --availability-zone us-east-1b
 
 # Quick deploy (pull, build, restart)
-ssh ec2-user@34.201.151.219 \
+ssh ec2-user@34.226.212.158 \
   "cd /var/www/clm-survey && git pull origin main && npm run build && pm2 restart clm-survey"
 
 # Or use deployment script (includes backup)
-ssh ec2-user@34.201.151.219 \
+ssh ec2-user@34.226.212.158 \
   "cd /var/www/clm-survey && ./deploy/update-app-amazon-linux.sh"
 
 # Manual database backup
-ssh ec2-user@34.201.151.219 \
+ssh ec2-user@34.226.212.158 \
   "mkdir -p ~/backups && cp /var/www/clm-survey/survey.db ~/backups/survey_\$(date +%Y%m%d_%H%M%S).db"
 ```
 
