@@ -302,9 +302,12 @@ Semantic color tokens for dark mode:
 - `border.subtle`: Border colors
 
 ### Deployment Process
-Application is deployed on AWS EC2 (Amazon Linux):
-- Instance ID: `i-0abb7acc30beb3e77`
-- Public IP: `34.226.212.158`
+Application is deployed on AWS EC2 (Amazon Linux 2023):
+- Instance ID: `i-0e57b74720e155251`
+- Public IP: `3.89.103.190`
+- Security Group: `sg-07b69fd0846b356fb` (`clm-survey-ec2-sg`)
+- EICE Endpoint: `eice-06265cc5ea1bfea71` (for SSH tunneling)
+- App Port: 8501 (matches ALB target group)
 - Deployment script: `./deploy/update-app-amazon-linux.sh`
 - Managed with PM2 process manager
 - Automated deployment updates:
@@ -316,25 +319,47 @@ Application is deployed on AWS EC2 (Amazon Linux):
 
 ### EC2 Deployment Commands
 ```bash
-# Connect via EC2 Instance Connect (key expires after ~60 seconds)
+# Connect via EC2 Instance Connect Endpoint (no public IP SSH needed)
+# Push ephemeral key + tunnel through EICE:
 aws ec2-instance-connect send-ssh-public-key \
-  --instance-id i-0abb7acc30beb3e77 \
+  --instance-id i-0e57b74720e155251 \
   --instance-os-user ec2-user \
   --ssh-public-key file://~/.ssh/id_ed25519.pub \
-  --availability-zone us-east-1b
+  --availability-zone us-east-1b && \
+ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null \
+  -i ~/.ssh/id_ed25519 \
+  -o ProxyCommand='aws ec2-instance-connect open-tunnel --instance-id i-0e57b74720e155251' \
+  ec2-user@i-0e57b74720e155251
 
-# Quick deploy (pull, build, restart)
-ssh ec2-user@34.226.212.158 \
+# Quick deploy (push key first, then SSH with command)
+aws ec2-instance-connect send-ssh-public-key \
+  --instance-id i-0e57b74720e155251 \
+  --instance-os-user ec2-user \
+  --ssh-public-key file://~/.ssh/id_ed25519.pub \
+  --availability-zone us-east-1b > /dev/null && \
+ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null \
+  -i ~/.ssh/id_ed25519 \
+  -o ProxyCommand='aws ec2-instance-connect open-tunnel --instance-id i-0e57b74720e155251' \
+  ec2-user@i-0e57b74720e155251 \
   "cd /var/www/clm-survey && git pull origin main && npm run build && pm2 restart clm-survey"
 
-# Or use deployment script (includes backup)
-ssh ec2-user@34.226.212.158 \
-  "cd /var/www/clm-survey && ./deploy/update-app-amazon-linux.sh"
-
-# Manual database backup
-ssh ec2-user@34.226.212.158 \
-  "mkdir -p ~/backups && cp /var/www/clm-survey/survey.db ~/backups/survey_\$(date +%Y%m%d_%H%M%S).db"
+# SCP files through EICE tunnel (push key first)
+aws ec2-instance-connect send-ssh-public-key \
+  --instance-id i-0e57b74720e155251 \
+  --instance-os-user ec2-user \
+  --ssh-public-key file://~/.ssh/id_ed25519.pub \
+  --availability-zone us-east-1b > /dev/null && \
+scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null \
+  -i ~/.ssh/id_ed25519 \
+  -o ProxyCommand='aws ec2-instance-connect open-tunnel --instance-id i-0e57b74720e155251' \
+  <local-file> ec2-user@i-0e57b74720e155251:<remote-path>
 ```
+
+### Infrastructure Security
+- **EC2 Security Group** (`clm-survey-ec2-sg`): SSH from EICE endpoint only, ports 80/8501 from ALB SG only
+- **ALB Security Group** (`sg-001828953835193b5`): Ports 80/443 from internet
+- **No direct SSH from internet** - all SSH access tunneled through EICE endpoint
+- **EICE Endpoint SG** (`sg-0dbdbc5ef5e6411d1`): Used by the EC2 Instance Connect Endpoint
 
 ### Admin Dashboard (2025-12-09)
 A comprehensive administration module for managing surveys and viewing analytics.
