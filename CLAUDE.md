@@ -158,23 +158,28 @@ npx tsx scripts/convertCsvToSurveyJson.ts
 ## Deployment Considerations
 
 ### EC2 Deployment
-- Target: Amazon Linux on EC2
-- Build locally or on server
+- Target: Amazon Linux 2023 on EC2 (t3.small)
+- App runs on port 8501 (matches ALB target group)
+- SSH access via EC2 Instance Connect Endpoint only (no direct internet SSH)
 - Environment variables in `.env.local`
-- SingleStore connection via connection string
+- Database: SQLite (`survey.db` in project root)
 
 ### Environment Variables
 
 Required in `.env.local`:
 
 ```bash
-# SingleStore connection
-SINGLESTORE_URL=mysql://user:pass@host:port/database
-DATABASE_MODE=local  # or 'remote' for production
+# Database mode
+DATABASE_MODE=local
 
 # Application settings
-NEXT_PUBLIC_API_URL=http://localhost:3000
-NEXT_PUBLIC_APP_URL=https://your-domain.com  # for production
+NEXT_PUBLIC_API_URL=http://localhost:8501
+NEXT_PUBLIC_APP_URL=https://clmvaluemap.com
+
+# Admin credentials
+ADMIN_USERNAME=admin
+ADMIN_PASSWORD_HASH=\$2b\$10\$<bcrypt-hash>
+ADMIN_SESSION_SECRET=<random-64-char-hex>
 ```
 
 ### Production Build
