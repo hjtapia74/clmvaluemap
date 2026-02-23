@@ -89,7 +89,7 @@ module.exports = {
     cwd: '/var/www/clm-survey',
     env: {
       NODE_ENV: 'production',
-      PORT: 3000
+      PORT: 8501
     },
     error_file: '/var/www/clm-survey/logs/err.log',
     out_file: '/var/www/clm-survey/logs/out.log',
@@ -119,7 +119,7 @@ server {
     server_name _;
 
     location / {
-        proxy_pass http://localhost:3000;
+        proxy_pass http://localhost:8501;
         proxy_http_version 1.1;
         proxy_set_header Upgrade $http_upgrade;
         proxy_set_header Connection 'upgrade';
