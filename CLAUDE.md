@@ -215,6 +215,12 @@ npm run start
    - Issue: "Bind parameters must not contain undefined"
    - Solution: Convert undefined to null before database operations
 
+5. **Supply Chain Malware via npm install** (2026-02-23):
+   - Issue: A dependency's install script injects a crontab entry that downloads a crypto miner from Pastebin
+   - Solution: **Always use `npm install --ignore-scripts` on EC2**, then `npm rebuild better-sqlite3 bcrypt` to compile native modules
+   - The miner (`/tmp/.XIN-unix/javae`) kills competing processes via SIGKILL, breaking PM2
+   - Local development on macOS is unaffected (the payload targets Linux)
+
 ## API Routes
 
 - `/api/session` - Create/get survey sessions

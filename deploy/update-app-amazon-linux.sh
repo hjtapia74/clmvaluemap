@@ -26,9 +26,10 @@ sudo -u ec2-user pm2 stop clm-survey
 echo "📥 Pulling latest changes from GitHub..."
 sudo -u ec2-user git pull origin main
 
-# Install/update dependencies
+# Install/update dependencies (--ignore-scripts prevents supply chain malware)
 echo "📦 Installing/updating dependencies..."
-sudo -u ec2-user npm install
+sudo -u ec2-user npm install --ignore-scripts
+sudo -u ec2-user npm rebuild better-sqlite3 bcrypt
 
 # Build the application
 echo "🔨 Building application..."

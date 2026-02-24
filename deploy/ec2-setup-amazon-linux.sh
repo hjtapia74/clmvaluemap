@@ -60,9 +60,11 @@ cd /var/www
 sudo -u ec2-user git clone https://github.com/hjtapia74/clmvaluemap.git clm-survey
 cd clm-survey
 
-# Install dependencies
+# Install dependencies (--ignore-scripts prevents supply chain malware)
 echo "📦 Installing Node.js dependencies..."
-sudo -u ec2-user npm install
+sudo -u ec2-user npm install --ignore-scripts
+echo "📦 Rebuilding native modules..."
+sudo -u ec2-user npm rebuild better-sqlite3 bcrypt
 
 # Create swap file for build process (needed for t2.micro)
 echo "💾 Creating swap space for build process..."
