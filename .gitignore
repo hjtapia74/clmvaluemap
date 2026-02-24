@@ -46,3 +46,6 @@ survey.db-shm
 survey.db-wal
 *.db
 *.sqlite
+
+# forensic reports (sensitive - not for repo)
+/docs/forensic-report-*.md
