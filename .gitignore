@@ -47,5 +47,6 @@ survey.db-wal
 *.db
 *.sqlite
 
-# forensic reports (sensitive - not for repo)
+# sensitive project files (infrastructure details, forensic reports)
+CLAUDE.md
 /docs/forensic-report-*.md
