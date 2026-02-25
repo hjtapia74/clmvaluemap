@@ -158,11 +158,12 @@ npx tsx scripts/convertCsvToSurveyJson.ts
 ## Deployment Considerations
 
 ### EC2 Deployment
-- Target: Amazon Linux 2023 on EC2 (t3.small)
+- Target: Amazon Linux 2023 on EC2 (t3.small runtime, t3.medium for builds)
 - App runs on port 8501 (matches ALB target group)
 - SSH access via EC2 Instance Connect Endpoint only (no direct internet SSH)
 - Environment variables in `.env.local`
 - Database: SQLite (`survey.db` in project root)
+- **Build requires t3.medium**: Next.js 15.5.9+ OOMs on t3.small during `npm run build`. The deploy script automatically resizes to t3.medium for the build, then back to t3.small for runtime.
 
 ### Environment Variables
 
@@ -188,13 +189,16 @@ npm run build
 npm run start
 ```
 
-### CI/CD Pipeline (TODO)
-- Git push triggers deployment
-- SSH to EC2 instance
-- Pull latest code
-- Install dependencies
-- Build application
-- Restart PM2 process
+### Deploy from Local Machine
+```bash
+./deploy/update-app-amazon-linux.sh
+```
+This script runs locally and handles the full deploy flow:
+1. Resizes EC2 to t3.medium (build needs >2GB RAM)
+2. Backs up the database
+3. SSHes in via EICE: `git pull`, `npm install --ignore-scripts`, `npm run build`
+4. Resizes back to t3.small
+5. Restarts PM2 and waits for ALB health check
 
 ## Known Issues and Solutions
 
@@ -220,6 +224,12 @@ npm run start
    - Solution: **Always use `npm install --ignore-scripts` on EC2**, then `npm rebuild better-sqlite3 bcrypt` to compile native modules
    - The miner (`/tmp/.XIN-unix/javae`) kills competing processes via SIGKILL, breaking PM2
    - Local development on macOS is unaffected (the payload targets Linux)
+
+6. **Next.js 15.5.9+ Build OOM on t3.small** (2026-02-24):
+   - Issue: `npm run build` gets SIGKILL'd on t3.small (2GB RAM + 4GB swap) for Next.js >= 15.5.7
+   - Solution: Deploy script temporarily resizes to t3.medium (4GB RAM) for build, then back to t3.small
+   - Next.js 15.5.3 builds fine on t3.small but is vulnerable to CVE-2025-55182 (CVSS 10)
+   - Runtime on t3.small works fine (~60MB RAM usage)
 
 ## API Routes
 
@@ -342,17 +352,8 @@ ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null \
   -o ProxyCommand='aws ec2-instance-connect open-tunnel --instance-id i-0e57b74720e155251' \
   ec2-user@i-0e57b74720e155251
 
-# Quick deploy (push key first, then SSH with command)
-aws ec2-instance-connect send-ssh-public-key \
-  --instance-id i-0e57b74720e155251 \
-  --instance-os-user ec2-user \
-  --ssh-public-key file://~/.ssh/id_ed25519.pub \
-  --availability-zone us-east-1b > /dev/null && \
-ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null \
-  -i ~/.ssh/id_ed25519 \
-  -o ProxyCommand='aws ec2-instance-connect open-tunnel --instance-id i-0e57b74720e155251' \
-  ec2-user@i-0e57b74720e155251 \
-  "cd /var/www/clm-survey && git pull origin main && npm run build && pm2 restart clm-survey"
+# Quick deploy (handles resize to t3.medium for build, then back to t3.small)
+./deploy/update-app-amazon-linux.sh
 
 # SCP files through EICE tunnel (push key first)
 aws ec2-instance-connect send-ssh-public-key \
